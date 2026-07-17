@@ -58,7 +58,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 
 <section class="page active" id="dashboard">
   <div class="row"><div><h2>Employee Dashboard</h2><div class="subtitle">Training progress for the active program year.</div></div><button class="btn light" id="exportEmployeeBtn">Export</button></div>
-  <div class="grid metrics" style="margin-top:16px"><div class="card metric"><span>Required Hours</span><strong>80</strong><small>Annual target</small></div><div class="card metric"><span>Completed Hours</span><strong id="completedHours">45</strong><small>Approved</small></div><div class="card metric"><span>Remaining Hours</span><strong id="remainingHours">35</strong><small>To target</small></div><div class="card metric"><span>Progress</span><strong id="progressPct">56%</strong><small>On track</small></div></div>
+  <div class="grid metrics" style="margin-top:16px"><div class="card metric"><span>Required Hours</span><strong id="requiredHours">80</strong><small>Annual target</small></div><div class="card metric"><span>Completed Hours</span><strong id="completedHours">0</strong><small>Approved</small></div><div class="card metric"><span>Remaining Hours</span><strong id="remainingHours">80</strong><small>To target</small></div><div class="card metric"><span>Progress</span><strong id="progressPct">0%</strong><small>On track</small></div></div>
   <div class="grid two" style="margin-top:16px"><div class="card"><h3>Recent Requests</h3><table><thead><tr><th>Training</th><th>Status</th><th>Hours</th></tr></thead><tbody id="dashboardRows"></tbody></table></div><div class="card"><h3>Organization</h3><p><b>Division:</b> <span data-division></span></p><p><b>Section:</b> <span data-section></span></p><p><b>Section Approval Group:</b> <span id="dashboardApprovalGroup"></span></p><p><b>Escalation:</b> <span id="dashboardEscalationGroup"></span></p></div></div>
 </section>
 
@@ -213,9 +213,20 @@ function updateLoginSections(){
  const divId=$('loginDivision').value;
  $('loginSection').innerHTML='<option value="">All / Not Assigned</option>'+db.sections.filter(x=>x.active&&x.divisionId===divId).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');
 }
+function getCurrentEmployee(){
+ const email=String(current.email||'').trim().toLowerCase();
+ return db.employees.find(e=>String(e.email||'').trim().toLowerCase()===email)||null;
+}
 function signIn(){
  if(!$('loginName').value.trim()||!$('loginEmail').checkValidity()){alert('Enter a valid name and work email.');return}
  current={name:$('loginName').value.trim(),email:$('loginEmail').value.trim().toLowerCase(),role:$('loginRole').value,divisionId:$('loginDivision').value,sectionId:$('loginSection').value};
+ let employee=getCurrentEmployee();
+ if(employee){
+  current.name=employee.name;current.divisionId=employee.divisionId;current.sectionId=employee.sectionId;
+ }else{
+  employee={id:uid('EMP'),name:current.name,number:'DEMO'+String(db.employees.length+1).padStart(3,'0'),email:current.email,divisionId:current.divisionId,sectionId:current.sectionId,supervisorLevel:'None',role:current.role==='Employee'?'Employee':current.role,targetHours:80,active:true};
+  db.employees.push(employee);saveData();
+ }
  $('login').classList.add('hidden');$('sideName').textContent=current.name;$('sideRole').textContent=current.role;$('sideDivision').textContent='Division: '+nameOf(db.divisions,current.divisionId);$('sideSection').textContent='Section: '+(nameOf(db.sections,current.sectionId)||'All / Not Assigned');$('headerUser').textContent=current.name+' · '+current.role;
  $('requestEmployee').value=current.name;$('requestDivision').value=nameOf(db.divisions,current.divisionId);$('requestSection').value=nameOf(db.sections,current.sectionId);
  buildNav();renderAll();
@@ -228,6 +239,7 @@ function buildNav(){
 }
 function showPage(id,button){
  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));if(button)button.classList.add('active');
+ if(id==='dashboard')renderRequests();
 }
 
 function renderAll(){
@@ -241,12 +253,23 @@ function renderAll(){
 }
 
 function renderRequests(){
- const employee= db.employees.find(e=>e.email.toLowerCase()===current.email)||db.employees[0];
+ const employee=getCurrentEmployee();
+ if(!employee){
+  $('dashboardRows').innerHTML='<tr><td colspan="3">No employee profile found for this email.</td></tr>';
+  $('requestRows').innerHTML='<tr><td colspan="7">No employee profile found.</td></tr>';
+  $('completionRequest').innerHTML='<option value="">No employee profile found</option>';
+  $('requiredHours').textContent='80';$('completedHours').textContent='0';$('remainingHours').textContent='80';$('progressPct').textContent='0%';return;
+ }
  const mine=db.requests.filter(r=>r.employeeId===employee.id);
  $('dashboardRows').innerHTML=mine.slice(0,3).map(r=>`<tr><td>${esc(r.title)}</td><td>${badge(r.status)}</td><td>${r.hours}</td></tr>`).join('')||'<tr><td colspan="3">No requests.</td></tr>';
  $('requestRows').innerHTML=mine.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(r.title)}</td><td>${esc(nameOf(db.divisions,r.divisionId))}</td><td>${esc(nameOf(db.sections,r.sectionId))}</td><td>${r.hours}</td><td>${badge(r.status)}</td><td>${r.status==='Pending'||r.status==='Returned'?`<button class="btn danger" data-request-cancel="${r.id}">Cancel</button>`:''}</td></tr>`).join('')||'<tr><td colspan="7">No requests.</td></tr>';
  $('completionRequest').innerHTML='<option value="">Select approved request</option>'+mine.filter(r=>r.status==='Approved').map(r=>`<option value="${r.id}">${esc(r.id+' - '+r.title)}</option>`).join('');
- const completed=mine.filter(r=>r.status==='Completed').reduce((s,r)=>s+Number(r.hours||0),0);$('completedHours').textContent=completed;$('remainingHours').textContent=Math.max(0,80-completed);$('progressPct').textContent=Math.min(100,Math.round(completed/80*100))+'%';
+ const approvedCompletions=db.completions.filter(c=>c.employeeId===employee.id&&c.status==='Approved');
+ const completionRequestIds=new Set(approvedCompletions.map(c=>c.requestId));
+ const reviewedHours=approvedCompletions.reduce((s,c)=>s+Number(c.actualHours||0),0);
+ const legacyHours=mine.filter(r=>r.status==='Completed'&&!completionRequestIds.has(r.id)).reduce((s,r)=>s+Number(r.hours||0),0);
+ const completed=reviewedHours+legacyHours,target=Number(employee.targetHours||80);
+ $('requiredHours').textContent=target;$('completedHours').textContent=completed;$('remainingHours').textContent=Math.max(0,target-completed);$('progressPct').textContent=(target?Math.min(100,Math.round(completed/target*100)):0)+'%';
  document.querySelectorAll('[data-request-cancel]').forEach(b=>b.addEventListener('click',()=>cancelRequest(b.dataset.requestCancel)));
 }
 function cancelRequest(id){const r=byId(db.requests,id);if(!r)return;if(!confirm(`Cancel ${id}?`))return;r.status='Cancelled';audit('Cancelled request','Training Request',id);renderAll()}
@@ -377,7 +400,7 @@ function renderReferenceSelects(){
 }
 function submitRequest(e){
  e.preventDefault();const form=$('requestForm');if(!form.checkValidity()){form.reportValidity();notify('requestNotice','Complete all required fields using valid values.','err');return}
- const employee=db.employees.find(x=>x.email.toLowerCase()===current.email)||db.employees[0];const section=byId(db.sections,employee.sectionId||current.sectionId);if(!section?.defaultGroupId){notify('requestNotice','The employee Section does not have a default Approval Group. Contact an administrator.','err');return}
+ const employee=getCurrentEmployee();if(!employee){notify('requestNotice','No employee profile was found for the signed-in email.','err');return}const section=byId(db.sections,employee.sectionId||current.sectionId);if(!section?.defaultGroupId){notify('requestNotice','The employee Section does not have a default Approval Group. Contact an administrator.','err');return}
  const cost=Number($('estimatedCost').value||0),hours=Number($('requestedHours').value);const id='REQ-'+String(1000+db.requests.length+1);
  db.requests.push({id,employeeId:employee.id,title:$('trainingTitle').value.trim(),divisionId:employee.divisionId||current.divisionId,sectionId:employee.sectionId||current.sectionId,hours,cost,status:'Pending',escalation:cost>=1000});
  saveData();audit('Submitted','Training Request',id);notify('requestNotice',cost>=1000?'Request submitted and flagged for Division escalation.':'Request submitted to the Section Approval Group.','ok');form.reset();renderAll();
@@ -392,7 +415,7 @@ function submitCompletion(e){
 }
 
 function csv(name,rows){const text=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv;charset=utf-8'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),0)}
-function exportEmployee(){csv('idp_employee_dashboard.csv',[['Metric','Value'],['Employee',current.name],['Division',nameOf(db.divisions,current.divisionId)],['Section',nameOf(db.sections,current.sectionId)],['Completed Hours',$('completedHours').textContent],['Target Hours',80]])}
+function exportEmployee(){csv('idp_employee_dashboard.csv',[['Metric','Value'],['Employee',current.name],['Division',nameOf(db.divisions,current.divisionId)],['Section',nameOf(db.sections,current.sectionId)],['Completed Hours',$('completedHours').textContent],['Target Hours',$('requiredHours').textContent]])}
 function exportRequests(){csv('idp_requests.csv',[['Request ID','Title','Division','Section','Hours','Cost','Status','Escalation'],...db.requests.map(r=>[r.id,r.title,nameOf(db.divisions,r.divisionId),nameOf(db.sections,r.sectionId),r.hours,r.cost,r.status,r.escalation?'Yes':'No'])])}
 function exportOrganizations(){csv('idp_divisions_sections.csv',[['Division','Division Code','Section','Section Code','Section Supervisor','Approval Group','Status'],...db.sections.map(s=>[nameOf(db.divisions,s.divisionId),byId(db.divisions,s.divisionId)?.code||'',s.name,s.code,nameOf(db.employees,s.supervisorId),nameOf(db.groups,s.defaultGroupId),statusText(s.active)])])}
 function exportApprovers(){csv('idp_approval_groups.csv',[['Group','Scope','Division','Section','Method','Approver','Role','Priority'],...db.members.map(m=>{const g=byId(db.groups,m.groupId);return[g?.name,g?.scope,nameOf(db.divisions,g?.divisionId),nameOf(db.sections,g?.sectionId),g?.method,nameOf(db.employees,m.employeeId),m.role,m.priority]})])}
