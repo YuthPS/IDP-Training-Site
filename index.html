@@ -261,7 +261,8 @@ function renderRequests(){
   $('requiredHours').textContent='80';$('completedHours').textContent='0';$('remainingHours').textContent='80';$('progressPct').textContent='0%';return;
  }
  const mine=db.requests.filter(r=>r.employeeId===employee.id);
- $('dashboardRows').innerHTML=mine.slice(0,3).map(r=>`<tr><td>${esc(r.title)}</td><td>${badge(r.status)}</td><td>${r.hours}</td></tr>`).join('')||'<tr><td colspan="3">No requests.</td></tr>';
+ const recent=[...mine].reverse().slice(0,3);
+ $('dashboardRows').innerHTML=recent.map(r=>`<tr><td>${esc(r.title)}</td><td>${badge(r.status)}</td><td>${r.hours}</td></tr>`).join('')||'<tr><td colspan="3">No requests.</td></tr>';
  $('requestRows').innerHTML=mine.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(r.title)}</td><td>${esc(nameOf(db.divisions,r.divisionId))}</td><td>${esc(nameOf(db.sections,r.sectionId))}</td><td>${r.hours}</td><td>${badge(r.status)}</td><td>${r.status==='Pending'||r.status==='Returned'?`<button class="btn danger" data-request-cancel="${r.id}">Cancel</button>`:''}</td></tr>`).join('')||'<tr><td colspan="7">No requests.</td></tr>';
  $('completionRequest').innerHTML='<option value="">Select approved request</option>'+mine.filter(r=>r.status==='Approved').map(r=>`<option value="${r.id}">${esc(r.id+' - '+r.title)}</option>`).join('');
  const approvedCompletions=db.completions.filter(c=>c.employeeId===employee.id&&c.status==='Approved');
