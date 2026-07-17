@@ -42,7 +42,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
       <div class="field"><label>Division</label><select id="loginDivision"></select></div>
       <div class="field"><label>Section</label><select id="loginSection"></select></div>
       <button class="btn primary" style="width:100%;margin-top:18px" id="loginBtn">Continue to App</button>
-      <div class="small" style="text-align:center;margin-top:14px">App version 1.3 · Last updated July 16, 2026 at 11:36 PM PT</div>
+      <div class="small" style="text-align:center;margin-top:14px">App version 1.4 · Last updated July 16, 2026 at 11:41 PM PT</div>
     </div>
   </div>
 </div>
@@ -194,7 +194,7 @@ let db=loadData();
 let current={name:'Alex Morgan',email:'alex.morgan@example.com',role:'Administrator',divisionId:'DIV1',sectionId:'SEC1'};
 
 const navMap={
- Employee:[['Dashboard','dashboard'],['New Request','new-request'],['My Requests','my-requests'],['Complete Training','complete-training']],
+ Employee:[['Dashboard','dashboard'],['My Training Progress','compliance-dashboard'],['New Request','new-request'],['My Requests','my-requests'],['Complete Training','complete-training']],
  'Section Supervisor':[['Section Dashboard','section-dashboard'],['Training Compliance','compliance-dashboard'],['Request Approvals','approver'],['Completion Reviews','approver']],
  'Division Supervisor':[['Division Dashboard','division-dashboard'],['Training Compliance','compliance-dashboard'],['Approval Overview','approver'],['Executive Reports','reports']],
  Approver:[['Approval Queue','approver'],['My Requests','my-requests']],
@@ -304,6 +304,7 @@ function renderDashboards(){
 
 function visibleComplianceEmployees(){
  let employees=db.employees.filter(e=>e.active);
+ if(current.role==='Employee')employees=employees.filter(e=>e.id===getCurrentEmployee()?.id);
  if(current.role==='Section Supervisor')employees=employees.filter(e=>e.sectionId===current.sectionId);
  if(current.role==='Division Supervisor')employees=employees.filter(e=>e.divisionId===current.divisionId);
  return employees;
