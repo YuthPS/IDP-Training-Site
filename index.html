@@ -3,7 +3,7 @@
   IDP Training App Demo
   Copyright © 2026 CP. All rights reserved.
   Designed and developed by CP for application design, demonstration, and project tracking.
-  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-1.7.
+  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-1.8.
 -->
 <html lang="en">
 <head>
@@ -12,24 +12,24 @@
 <meta name="author" content="CP">
 <meta name="copyright" content="Copyright 2026 CP. All rights reserved.">
 <meta name="application-name" content="IDP Training App Demo">
-<meta name="application-build" content="CP-IDP-2026-1.7">
+<meta name="application-build" content="CP-IDP-2026-1.8">
 <meta name="x-project-signature" content="CP26-IDP-7F3A">
 <title>IDP Training Management System</title>
 <style>
-:root{--p:#1747b7;--pd:#103889;--g:#18864b;--o:#d97706;--r:#c93434;--bg:#f5f7fb;--bd:#dfe4ef;--t:#182033;--m:#697386;--shadow:0 8px 24px rgba(19,42,94,.08)}
+:root{--gold:#fec627;--cyan:#00aeef;--p:#1f479e;--pd:#173675;--gray:#e6e7e9;--charcoal:#4b4c4d;--g:#00aeef;--o:#fec627;--r:#4b4c4d;--bg:#f5f6f7;--bd:#e0e2e4;--t:#303132;--m:#696b6d;--shadow:0 8px 24px rgba(31,71,158,.10)}
 *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--t)}button,input,select,textarea{font:inherit}.hidden{display:none!important}
-.app{display:grid;grid-template-columns:275px 1fr;min-height:100vh}aside{background:#fff;border-right:1px solid var(--bd);position:sticky;top:0;height:100vh;overflow:auto}.brand{padding:22px;background:linear-gradient(135deg,var(--pd),#3049d8);color:#fff}.brand h1{margin:0;font-size:20px}.brand p{margin:5px 0 0;font-size:12px}.user,.org,.year{padding:16px;border-bottom:1px solid var(--bd)}.user small,.org small,.year small{display:block;color:var(--m);margin-top:4px}
-nav{padding:12px}nav button{width:100%;border:0;background:transparent;text-align:left;padding:11px 13px;border-radius:8px;margin:3px 0;cursor:pointer}nav button.active,nav button:hover{background:#eef3ff;color:var(--p);font-weight:700}
-main{min-width:0}header{height:66px;background:#fff;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;padding:0 24px;position:sticky;top:0;z-index:5}.page{display:none;padding:24px}.page.active{display:block}
+.app{display:grid;grid-template-columns:275px 1fr;min-height:100vh}aside{background:#fff;border-right:1px solid var(--bd);position:sticky;top:0;height:100vh;overflow:auto}.brand{padding:22px;background:linear-gradient(135deg,var(--p),var(--cyan));color:#fff;border-bottom:6px solid var(--gold)}.brand h1{margin:0;font-size:20px}.brand p{margin:5px 0 0;font-size:12px}.user,.org,.year{padding:16px;border-bottom:1px solid var(--bd)}.user small,.org small,.year small{display:block;color:var(--m);margin-top:4px}
+nav{padding:12px}nav button{width:100%;border:0;border-left:4px solid transparent;background:transparent;text-align:left;padding:11px 13px;border-radius:6px;margin:3px 0;cursor:pointer;color:var(--charcoal)}nav button.active,nav button:hover{background:#eaf8fd;border-left-color:var(--cyan);color:var(--p);font-weight:700}
+main{min-width:0}header{height:66px;background:#fff;border-bottom:1px solid var(--bd);border-top:5px solid var(--gold);display:flex;justify-content:space-between;align-items:center;padding:0 24px;position:sticky;top:0;z-index:5}header>strong{color:var(--p)}.page{display:none;padding:24px}.page.active{display:block}
 .row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}.subtitle{color:var(--m)}.grid{display:grid;gap:16px}.metrics{grid-template-columns:repeat(4,minmax(0,1fr))}.two{grid-template-columns:1.1fr .9fr}.three{grid-template-columns:repeat(3,1fr)}
-.card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:18px;box-shadow:var(--shadow)}.metric strong{display:block;font-size:34px;margin:6px 0}.metric span,.metric small{color:var(--m)}
-.btn{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:700}.primary{background:var(--p);color:#fff}.success{background:var(--g);color:#fff}.warning{background:var(--o);color:#fff}.danger{background:var(--r);color:#fff}.light{background:#eef2f8;color:#25304a}.outline{background:#fff;border:1px solid var(--bd)}.btn:disabled{opacity:.5;cursor:not-allowed}.actions{display:flex;gap:8px;flex-wrap:wrap}
+.card{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:18px;box-shadow:var(--shadow)}.metric{border-top:5px solid var(--p)}.metric:nth-child(2){border-top-color:var(--cyan)}.metric:nth-child(3){border-top-color:var(--gold)}.metric:nth-child(4){border-top-color:var(--charcoal)}.metric strong{display:block;font-size:34px;margin:6px 0;color:var(--p)}.metric span,.metric small{color:var(--m)}
+.btn{border:0;border-radius:7px;padding:10px 14px;cursor:pointer;font-weight:700;transition:filter .15s ease,transform .15s ease}.btn:hover{filter:brightness(.94);transform:translateY(-1px)}.primary{background:var(--p);color:#fff}.success{background:var(--cyan);color:#17313b}.warning{background:var(--gold);color:#3c3520}.danger{background:var(--charcoal);color:#fff}.light{background:var(--gray);color:var(--charcoal)}.outline{background:#fff;border:1px solid var(--charcoal);color:var(--charcoal)}.btn:disabled{opacity:.5;cursor:not-allowed}.actions{display:flex;gap:8px;flex-wrap:wrap}
 .field{display:flex;flex-direction:column;gap:6px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}label{font-size:14px;font-weight:700}input,select,textarea{border:1px solid #cfd6e5;border-radius:8px;padding:10px;background:#fff}input:invalid,select:invalid,textarea:invalid{border-color:#d84c4c}textarea{min-height:95px}
-table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px solid var(--bd);text-align:left;font-size:14px;vertical-align:top}th{background:#f8faff}.status{display:inline-block;padding:5px 9px;border-radius:6px;font-size:12px;font-weight:700}.Pending,.In.Progress{background:#fff0d8;color:#995a00}.Approved,.Active{background:#e5f6ea;color:#15723b}.Completed{background:#e8efff;color:#184aad}.Not.Started{background:#eef2f8;color:#5d6678}.Returned,.Rejected,.Cancelled,.Inactive{background:#fde8e8;color:#a52929}
+table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px solid var(--bd);text-align:left;font-size:14px;vertical-align:top}th{background:var(--charcoal);color:#fff}.status{display:inline-block;padding:5px 9px;border-radius:6px;font-size:12px;font-weight:700}.Pending,.In.Progress{background:#fff2bd;color:#715600}.Approved,.Active{background:#d6f4ff;color:#07556f}.Completed{background:#e4eafa;color:var(--p)}.Not.Started{background:var(--gray);color:var(--charcoal)}.Returned,.Rejected,.Cancelled,.Inactive{background:#e2e2e2;color:#3d3e3f}
 .tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}.tabs button{border:1px solid var(--bd);background:#fff;padding:9px 12px;border-radius:8px;cursor:pointer}.tabs button.active{background:var(--p);color:#fff}.tab{display:none}.tab.active{display:block}
 .notice{display:none;padding:11px;border-radius:8px;margin-bottom:14px}.notice.show{display:block}.notice.ok{background:#e8f7ec;color:#146a31}.notice.err{background:#fde8e8;color:#9b1c1c}.notice.info{background:#e8efff;color:#184aad}
 .modal{position:fixed;inset:0;background:rgba(12,25,55,.55);display:none;place-items:center;padding:20px;z-index:200}.modal.show{display:grid}.modal-card{width:min(760px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:15px;padding:20px;box-shadow:0 30px 90px rgba(0,0,0,.25)}
-.login{position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:22px;background:linear-gradient(135deg,#0f2f73,#214bb6 55%,#6c3bd1)}.login-card{width:min(860px,100%);display:grid;grid-template-columns:1fr 1fr;background:#fff;border-radius:20px;overflow:hidden}.login-brand{padding:38px;color:#fff;background:linear-gradient(160deg,#102f73,#3c4fd8)}.login-form{padding:38px}.login-form .field{margin-top:12px}
+.login{position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:22px;background:linear-gradient(135deg,var(--charcoal),var(--p) 58%,var(--cyan))}.login-card{width:min(860px,100%);display:grid;grid-template-columns:1fr 1fr;background:#fff;border-radius:18px;overflow:hidden;border-top:8px solid var(--gold);box-shadow:0 30px 80px rgba(0,0,0,.28)}.login-brand{padding:38px;color:#fff;background:linear-gradient(160deg,var(--p),var(--cyan))}.login-brand h1{border-left:6px solid var(--gold);padding-left:14px}.login-form{padding:38px}.login-form h2{color:var(--p)}.login-form .field{margin-top:12px}
 .small{font-size:12px;color:var(--m)}.required::after{content:" *";color:var(--r)}
 .ownership{padding:14px 16px;color:var(--m);font-size:11px;line-height:1.55;border-top:1px solid var(--bd)}.ownership strong{color:var(--pd)}
 .progress-track{width:130px;height:9px;background:#e8edf5;border-radius:999px;overflow:hidden}.progress-fill{height:100%;background:var(--p);border-radius:999px}.progress-fill.done{background:var(--g)}
@@ -54,7 +54,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
       <div class="field"><label>Division</label><select id="loginDivision"></select></div>
       <div class="field"><label>Section</label><select id="loginSection"></select></div>
       <button class="btn primary" style="width:100%;margin-top:18px" id="loginBtn">Continue to App</button>
-      <div class="small" style="text-align:center;margin-top:14px">App version 1.7<br>Last updated July 17, 2026 at 11:17 AM PT</div>
+      <div class="small" style="text-align:center;margin-top:14px">App version 1.8<br>Last updated July 17, 2026 at 11:35 AM PT</div>
       <div class="small" style="text-align:center;margin-top:10px">© 2026 IDP Training App Demo</div>
     </div>
   </div>
@@ -67,7 +67,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <nav id="nav"></nav>
   <div class="org"><b>Organization</b><small id="sideDivision"></small><small id="sideSection"></small></div>
   <div class="year"><b>Active Program Year</b><small>Jul 1, 2026 – Jun 30, 2027</small><small>Target: 80 Hours</small></div>
-  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 1.7</div>
+  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 1.8</div>
 </aside>
 <main>
 <header><strong>IDP Training Management System</strong><div class="actions"><span id="headerUser"></span><button class="btn light" id="logoutBtn">Sign Out</button></div></header>
@@ -166,7 +166,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 'use strict';
 
 // Internal provenance marker for future source verification; intentionally not rendered in the UI.
-const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-1.7'});
+const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-1.8'});
 
 const STORAGE_KEY='idpDivisionSectionPublicDemoV2';
 const seed={
