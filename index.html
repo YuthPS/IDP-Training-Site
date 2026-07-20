@@ -3,7 +3,7 @@
   IDP Training App Demo
   Copyright © 2026 CP. All rights reserved.
   Designed and developed by CP for application design, demonstration, and project tracking.
-  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.5.
+  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.6.
 -->
 <html lang="en">
 <head>
@@ -12,7 +12,7 @@
 <meta name="author" content="CP">
 <meta name="copyright" content="Copyright 2026 CP. All rights reserved.">
 <meta name="application-name" content="IDP Training App Demo">
-<meta name="application-build" content="CP-IDP-2026-2.5">
+<meta name="application-build" content="CP-IDP-2026-2.6">
 <meta name="x-project-signature" content="CP26-IDP-7F3A">
 <title>IDP Training Management System</title>
 <style>
@@ -34,7 +34,8 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 .ownership{padding:14px 16px;color:var(--m);font-size:11px;line-height:1.55;border-top:1px solid var(--bd)}.ownership strong{color:var(--pd)}
 .progress-track{width:130px;height:9px;background:#e8edf5;border-radius:999px;overflow:hidden}.progress-fill{height:100%;background:var(--p);border-radius:999px}.progress-fill.done{background:var(--g)}
 .chat-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px}.chat-window{height:420px;overflow:auto;background:#f8fafc;border:1px solid var(--bd);border-radius:10px;padding:16px}.chat-message{display:flex;margin:9px 0}.chat-message.employee{justify-content:flex-end}.chat-bubble{max-width:82%;padding:10px 13px;border-radius:12px;line-height:1.45;white-space:pre-wrap}.chat-message.bot .chat-bubble{background:#eaf8fd;border:1px solid #bfe8f7;color:#173675}.chat-message.employee .chat-bubble{background:var(--p);color:#fff}.chat-form{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:12px}.quick-question{width:100%;margin:4px 0;text-align:left}
-@media(max-width:980px){.app{grid-template-columns:1fr}aside{position:relative;height:auto}.metrics,.two,.three,.form-grid{grid-template-columns:1fr 1fr}.chat-layout{grid-template-columns:1fr}}@media(max-width:680px){.login-card,.metrics,.two,.three,.form-grid{grid-template-columns:1fr}.page{padding:17px}.chat-form{grid-template-columns:1fr}}
+.comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.comparison-panel{border:1px solid var(--bd);border-radius:10px;padding:14px;background:#f8fafc}.comparison-panel h4{margin:0 0 10px;color:var(--p)}.comparison-line{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--bd)}.comparison-line:last-child{border-bottom:0}.comparison-line span{color:var(--m)}.variance-summary{margin-top:12px;padding:11px 13px;border-radius:8px;font-weight:600}.variance-summary.match{background:#e8f7ec;color:#146a31}.variance-summary.changed{background:#fff2bd;color:#715600}.variance-list{margin:7px 0 0;padding-left:19px;font-weight:400}
+@media(max-width:980px){.app{grid-template-columns:1fr}aside{position:relative;height:auto}.metrics,.two,.three,.form-grid{grid-template-columns:1fr 1fr}.chat-layout{grid-template-columns:1fr}}@media(max-width:680px){.login-card,.metrics,.two,.three,.form-grid,.comparison-grid{grid-template-columns:1fr}.page{padding:17px}.chat-form{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -57,7 +58,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
       <div class="small" style="margin-top:10px">Unknown emails create a new profile with the Employee role. Only an Administrator can change roles.</div>
       <div id="loginNotice" class="notice" style="margin-top:10px;margin-bottom:0"></div>
       <button class="btn primary" style="width:100%;margin-top:18px" id="loginBtn">Continue to App</button>
-      <div class="small" style="text-align:center;margin-top:14px">App version 2.5<br>Last updated July 20, 2026</div>
+      <div class="small" style="text-align:center;margin-top:14px">App version 2.6<br>Last updated July 20, 2026</div>
       <div class="small" style="text-align:center;margin-top:10px">© 2026 IDP Training App Demo</div>
     </div>
   </div>
@@ -70,7 +71,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <nav id="nav"></nav>
   <div class="org"><b>Organization</b><small id="sideDivision"></small><small id="sideSection"></small></div>
   <div class="year"><b>Active Program Year</b><small>Jul 1, 2026 – Jun 30, 2027</small><small>Target: 80 Hours</small></div>
-  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.5</div>
+  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.6</div>
 </aside>
 <main>
 <header><strong>IDP Training Management System</strong><div class="actions"><span id="headerUser"></span><button class="btn light" id="logoutBtn">Sign Out</button></div></header>
@@ -112,11 +113,14 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <div id="completionNotice" class="notice"></div>
   <div class="card" style="margin-top:16px"><form id="completionForm" novalidate><div class="form-grid">
     <div class="field full"><label class="required">Approved Request</label><select id="completionRequest" required></select></div>
-    <div class="field"><label class="required">Completion Date</label><input id="completionDate" type="date" required></div>
+    <div class="field full hidden" id="completionComparison"><h3 style="margin:4px 0 12px">Approved Request vs Actual Completion</h3><div class="comparison-grid"><div class="comparison-panel"><h4>Approved Request</h4><div id="requestedComparison"></div></div><div class="comparison-panel"><h4>Actual Completion</h4><div id="actualComparison"></div></div></div><div id="completionVariance"></div></div>
+    <div class="field"><label class="required">Actual Completion Date</label><input id="completionDate" type="date" required></div>
+    <div class="field"><label class="required">Actual Start Time</label><select id="actualStartTime" required></select><div class="small">30-minute intervals</div></div>
+    <div class="field"><label class="required">Actual End Time</label><select id="actualEndTime" required></select><div class="small">30-minute intervals</div></div>
     <div class="field"><label class="required">Actual Hours</label><input id="actualHours" type="number" min="0.5" max="80" step="0.5" required></div>
     <div class="field"><label>Certificate Number</label><input id="certificateNumber" maxlength="100"></div>
     <div class="field"><label>Certificate File</label><input id="certificateFile" type="file" accept=".pdf,.png,.jpg,.jpeg"><div class="small">Prototype stores the file name only; production uses a Dataverse file column.</div></div>
-    <div class="field full"><label>Completion Notes</label><textarea id="completionNotes" maxlength="2000"></textarea></div>
+    <div class="field full"><label id="completionNotesLabel">Completion Notes / Variance Explanation</label><textarea id="completionNotes" maxlength="2000" placeholder="Required when the actual date, time, or hours differ from the approved request."></textarea></div>
   </div><button class="btn success" style="margin-top:16px" type="submit">Submit Completion</button></form></div>
 </section>
 
@@ -199,7 +203,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 'use strict';
 
 // Internal provenance marker for future source verification; intentionally not rendered in the UI.
-const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.5'});
+const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.6'});
 
 const STORAGE_KEY='idpDivisionSectionPublicDemoV3';
 const seed={
@@ -274,13 +278,39 @@ function timeToMinutes(value){const [h,m]=String(value||'').split(':').map(Numbe
 function populateTimeOptions(){
  const options=Array.from({length:48},(_,index)=>{const hours=Math.floor(index/2),minutes=index%2?30:0;const value=`${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}`;return{value,label:formatTime(value)}});
  const fill=(id,defaultValue)=>{$(id).innerHTML=options.map(option=>`<option value="${option.value}"${option.value===defaultValue?' selected':''}>${option.label}</option>`).join('')};
- fill('startTime','08:00');fill('endTime','17:00');
+ fill('startTime','08:00');fill('endTime','17:00');fill('actualStartTime','08:00');fill('actualEndTime','17:00');
+}
+function completionVariance(request,completion){
+ const differences=[];
+ if(completion.date&&completion.date!==request.trainingDate)differences.push(`Date changed from ${formatDate(request.trainingDate)} to ${formatDate(completion.date)}.`);
+ if(completion.startTime&&completion.startTime!==request.startTime)differences.push(`Start time changed from ${formatTime(request.startTime)} to ${formatTime(completion.startTime)}.`);
+ if(completion.endTime&&completion.endTime!==request.endTime)differences.push(`End time changed from ${formatTime(request.endTime)} to ${formatTime(completion.endTime)}.`);
+ if(Number.isFinite(completion.hours)&&completion.hours!==Number(request.hours||0)){const variance=completion.hours-Number(request.hours||0);differences.push(`Hours variance: ${variance>0?'+':''}${variance.toFixed(1)} hour${Math.abs(variance)===1?'':'s'} (${request.hours} requested; ${completion.hours} actual).`)}
+ return differences;
+}
+function comparisonLines(values){return Object.entries(values).map(([label,value])=>`<div class="comparison-line"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join('')}
+function renderCompletionComparison(){
+ const request=byId(db.requests,$('completionRequest').value);
+ if(!request){$('completionComparison').classList.add('hidden');$('completionNotes').required=false;$('completionNotesLabel').classList.remove('required');return}
+ $('completionComparison').classList.remove('hidden');
+ const actual={date:$('completionDate').value,startTime:$('actualStartTime').value,endTime:$('actualEndTime').value,hours:$('actualHours').value===''?NaN:Number($('actualHours').value)};
+ $('requestedComparison').innerHTML=comparisonLines({'Training':request.title,'Date':formatDate(request.trainingDate),'Start Time':formatTime(request.startTime),'End Time':formatTime(request.endTime),'Requested Hours':`${request.hours} hours`});
+ $('actualComparison').innerHTML=comparisonLines({'Date':actual.date?formatDate(actual.date):'Not entered','Start Time':formatTime(actual.startTime),'End Time':formatTime(actual.endTime),'Actual Hours':Number.isFinite(actual.hours)?`${actual.hours} hours`:'Not entered'});
+ const differences=completionVariance(request,actual),complete=actual.date&&actual.startTime&&actual.endTime&&Number.isFinite(actual.hours);
+ const changed=complete&&differences.length>0;
+ $('completionVariance').innerHTML=!complete?'<div class="variance-summary changed">Enter all actual values to run the comparison.</div>':changed?`<div class="variance-summary changed">Differences found — explain the variance before submitting.<ul class="variance-list">${differences.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>`:'<div class="variance-summary match">Match confirmed — actual date, time, and hours match the approved request.</div>';
+ $('completionNotes').required=changed;$('completionNotesLabel').classList.toggle('required',changed);
+}
+function selectCompletionRequest(){
+ const request=byId(db.requests,$('completionRequest').value);
+ if(request){$('completionDate').value=request.trainingDate||'';$('actualStartTime').value=request.startTime||'08:00';$('actualEndTime').value=request.endTime||'17:00';$('actualHours').value=request.hours||''}
+ renderCompletionComparison();
 }
 function trainingDateFor(request){const completion=[...db.completions].reverse().find(c=>c.requestId===request.id&&c.completionDate);return completion?.completionDate||request.trainingDate||''}
 function latestEmployeeTrainingDate(employeeId){return db.requests.filter(r=>r.employeeId===employeeId).map(trainingDateFor).filter(Boolean).sort().at(-1)||''}
 function today(){return new Date().toISOString().slice(0,10)}
 function notify(id,message,type='ok'){const n=$(id);n.className=`notice show ${type}`;n.textContent=message;setTimeout(()=>n.classList.remove('show'),5000)}
-function requestSnapshot(request){return{title:request.title||'',platform:request.platform||'',trainingDate:request.trainingDate||'',startTime:formatTime(request.startTime),endTime:formatTime(request.endTime),hours:Number(request.hours||0),cost:Number(request.cost||0),justification:request.justification||'',status:request.status||''}}
+function requestSnapshot(request){return{title:request.title||'',platform:request.platform||'',classType:request.classType||'',category:request.category||'',trainingDate:request.trainingDate||'',startTime:formatTime(request.startTime),endTime:formatTime(request.endTime),hours:Number(request.hours||0),cost:Number(request.cost||0),justification:request.justification||'',status:request.status||''}}
 function audit(action,entity,record,note='',details={}){db.audit.unshift({date:new Date().toISOString(),action,entity,record,by:current.name,note,previousValues:details.previousValues||'',newValues:details.newValues||''});saveData()}
 function auditDetail(value){if(!value)return '—';return `<details><summary>View</summary><div class="small" style="max-width:320px;white-space:normal">${esc(value)}</div></details>`}
 function statusText(active){return active?'Active':'Inactive'}
@@ -362,7 +392,7 @@ function chatResponse(question){
   const section=byId(db.sections,employee.sectionId),group=nameOf(db.groups,section?.defaultGroupId);return group?`Your request routes to ${group}, based on your Section. High-cost or special requests may also require Division escalation.`:'Your Section does not currently have an approval group configured. Please contact an administrator.';
  }
  if(/cancel/.test(q))return 'Open My Requests and select Cancel for a Pending, Pending Division Approval, or Returned request. A cancellation reason is required. Approved, completed, rejected, or already cancelled records cannot be cancelled by the employee.';
- if(/new|submit|create/.test(q))return 'Open New Request, complete the training title, platform, date, 30-minute start and end times, requested hours, cost, and business justification, then select Submit Request.';
+ if(/new|submit|create/.test(q))return 'Open New Request, complete the training title, platform, class type, category, date, 30-minute start and end times, requested hours, cost, and business justification, then select Submit Request.';
  if(/reason|why/.test(q))return 'Open My Requests and check Reason / Note. Return, reject, and cancellation decisions require a recorded reason. If no reason appears, contact your Section approval group.';
  return 'I can help with: training progress, request status, new requests, approval routing, returned-request editing, cancellations, and completion reporting. Try one of the Quick Questions.';
 }
@@ -406,7 +436,10 @@ function renderRequests(){
  const recent=[...mine].reverse().slice(0,3);
  $('dashboardRows').innerHTML=recent.map(r=>`<tr><td>${esc(r.title)}</td><td>${formatDate(trainingDateFor(r))}<div class="small">${formatTimeRange(r)}</div></td><td>${badge(r.status)}</td><td>${r.hours}</td></tr>`).join('')||'<tr><td colspan="4">No requests.</td></tr>';
  $('requestRows').innerHTML=mine.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(r.title)}</td><td>${esc(nameOf(db.divisions,r.divisionId))}</td><td>${esc(nameOf(db.sections,r.sectionId))}</td><td>${formatDate(trainingDateFor(r))}</td><td>${formatTime(r.startTime)}</td><td>${formatTime(r.endTime)}</td><td>${r.hours}</td><td>${badge(r.status)}${stageApprovals(r).length?`<div class="small">${stageApprovals(r).length} of ${activeMembers(stageGroupId(r)).length||'?'} approvals</div>`:''}</td><td>${esc(r.decisionNote||r.cancelReason||'—')}</td><td><div class="actions">${requestActionButtons(r)}</div></td></tr>`).join('')||'<tr><td colspan="11">No requests.</td></tr>';
+ const selectedCompletionRequest=$('completionRequest').value;
  $('completionRequest').innerHTML='<option value="">Select approved request</option>'+mine.filter(r=>r.status==='Approved').map(r=>`<option value="${r.id}">${esc(r.id+' - '+r.title+' - '+(trainingDateFor(r)||'Date not recorded')+' - '+formatTimeRange(r))}</option>`).join('');
+ if([...$('completionRequest').options].some(option=>option.value===selectedCompletionRequest))$('completionRequest').value=selectedCompletionRequest;
+ renderCompletionComparison();
  const progress=employeeProgress(employee);
  $('requiredHours').textContent=progress.target;$('completedHours').textContent=progress.completed;$('remainingHours').textContent=progress.remaining;$('progressPct').textContent=progress.percent+'%';
  document.querySelectorAll('[data-request-edit]').forEach(b=>b.addEventListener('click',()=>openRequestCorrection(b.dataset.requestEdit,'employee')));
@@ -450,7 +483,7 @@ function performCancelRequest(id,reason){
 function renderDashboards(){
  const secEmployees=db.employees.filter(e=>e.sectionId===current.sectionId&&e.active);$('sectionEmployeeCount').textContent=secEmployees.length;$('sectionPendingCount').textContent=db.requests.filter(r=>r.sectionId===current.sectionId&&r.status==='Pending').length;$('sectionCompletionCount').textContent=db.completions.filter(c=>c.sectionId===current.sectionId&&c.status==='Submitted').length;
  $('sectionEmployeeRows').innerHTML=secEmployees.map(e=>`<tr><td>${esc(e.name)}</td><td>${esc(e.email)}</td><td>${esc(e.role)}</td><td>${badge(statusText(e.active))}</td></tr>`).join('')||'<tr><td colspan="4">No employees.</td></tr>';
- const divSections=db.sections.filter(s=>s.divisionId===current.divisionId&&s.active);const divEmployees=db.employees.filter(e=>e.divisionId===current.divisionId&&e.active);$('divisionSectionCount').textContent=divSections.length;$('divisionEmployeeCount').textContent=divEmployees.length;$('divisionEscalationCount').textContent=db.requests.filter(r=>r.divisionId===current.divisionId&&r.escalation&&r.status==='Pending').length;
+ const divSections=db.sections.filter(s=>s.divisionId===current.divisionId&&s.active);const divEmployees=db.employees.filter(e=>e.divisionId===current.divisionId&&e.active);$('divisionSectionCount').textContent=divSections.length;$('divisionEmployeeCount').textContent=divEmployees.length;$('divisionEscalationCount').textContent=db.requests.filter(r=>r.divisionId===current.divisionId&&r.status==='Pending Division Approval').length;
  $('divisionSectionRows').innerHTML=divSections.map(s=>`<tr><td>${esc(s.name)}</td><td>${db.employees.filter(e=>e.sectionId===s.id&&e.active).length}</td><td>${esc(nameOf(db.groups,s.defaultGroupId)||'Not configured')}</td><td>${badge(statusText(s.active))}</td></tr>`).join('');
  $('reportDivisions').textContent=db.divisions.filter(x=>x.active).length;$('reportSections').textContent=db.sections.filter(x=>x.active).length;$('reportEmployees').textContent=db.employees.filter(x=>x.active).length;
 }
@@ -513,7 +546,7 @@ function renderApprovals(){
  $('approvalQueue').innerHTML=pending.map(r=>`<div class="card" style="box-shadow:none;margin-bottom:10px"><b>${esc(r.title)}</b><p><b>Stage:</b> ${r.status==='Pending Division Approval'?'Division Escalation':'Section Approval'} — ${esc(nameOf(db.groups,stageGroupId(r))||'No group configured')}${approvalProgressInfo(r)}</p><p><b>Employee:</b> ${esc(nameOf(db.employees,r.employeeId))}<br><b>Training Date:</b> ${formatDate(trainingDateFor(r))}<br><b>Time:</b> ${formatTimeRange(r)}<br>${esc(nameOf(db.sections,r.sectionId))} · ${r.hours} hours · $${Number(r.cost||0)}${r.escalation?' · Division escalation required':''}</p><div class="actions"><button class="btn success" data-decision="Approved" data-id="${r.id}">Approve</button><button class="btn warning" data-decision="Returned" data-id="${r.id}">Return</button><button class="btn danger" data-decision="Rejected" data-id="${r.id}">Reject</button></div></div>`).join('')||'<p>No pending requests require your approval.</p>';
  document.querySelectorAll('[data-decision]').forEach(b=>b.addEventListener('click',()=>decideRequest(b.dataset.id,b.dataset.decision)));
  const completions=db.completions.filter(c=>c.status==='Submitted'&&canReviewCompletionRecord(c));
- $('completionQueue').innerHTML=completions.map(c=>`<div class="card" style="box-shadow:none;margin-bottom:10px"><b>${esc(c.requestId)}</b> · ${esc(nameOf(db.employees,c.employeeId))}<p>${c.actualHours} hours · ${formatDate(c.completionDate)}</p>${c.certificateFileName||c.certificateNumber?`<p><b>Certificate:</b> ${esc(c.certificateFileName||'—')}${c.certificateNumber?` · #${esc(c.certificateNumber)}`:''}</p>`:''}${c.notes?`<p><b>Employee note:</b> ${esc(c.notes)}</p>`:''}<div class="actions"><button class="btn success" data-cdecision="Approved" data-cid="${c.id}">Approve</button><button class="btn warning" data-cdecision="Returned" data-cid="${c.id}">Return</button><button class="btn danger" data-cdecision="Rejected" data-cid="${c.id}">Reject</button></div></div>`).join('')||'<p>No pending completion reviews for you.</p>';
+ $('completionQueue').innerHTML=completions.map(c=>{const r=byId(db.requests,c.requestId)||{};const actualStart=c.actualStartTime||r.startTime||'',actualEnd=c.actualEndTime||r.endTime||'';const differences=completionVariance(r,{date:c.completionDate,startTime:actualStart,endTime:actualEnd,hours:Number(c.actualHours)});return `<div class="card" style="box-shadow:none;margin-bottom:10px"><b>${esc(c.requestId)}</b> · ${esc(nameOf(db.employees,c.employeeId))}<div class="comparison-grid" style="margin-top:12px"><div class="comparison-panel"><h4>Approved Request</h4>${comparisonLines({'Date':formatDate(r.trainingDate),'Time':formatTimeRange(r),'Hours':`${r.hours||0} hours`})}</div><div class="comparison-panel"><h4>Actual Completion</h4>${comparisonLines({'Date':formatDate(c.completionDate),'Time':`${formatTime(actualStart)} – ${formatTime(actualEnd)}`,'Hours':`${c.actualHours} hours`})}</div></div><div class="variance-summary ${differences.length?'changed':'match'}">${differences.length?`Variance found:<ul class="variance-list">${differences.map(item=>`<li>${esc(item)}</li>`).join('')}</ul>`:'Match confirmed — actual details match the approved request.'}</div>${c.certificateFileName||c.certificateNumber?`<p><b>Certificate:</b> ${esc(c.certificateFileName||'—')}${c.certificateNumber?` · #${esc(c.certificateNumber)}`:''}</p>`:''}${c.notes?`<p><b>Employee note:</b> ${esc(c.notes)}</p>`:''}<div class="actions"><button class="btn success" data-cdecision="Approved" data-cid="${c.id}">Approve</button><button class="btn warning" data-cdecision="Returned" data-cid="${c.id}">Return</button><button class="btn danger" data-cdecision="Rejected" data-cid="${c.id}">Reject</button></div></div>`}).join('')||'<p>No pending completion reviews for you.</p>';
  document.querySelectorAll('[data-cdecision]').forEach(b=>b.addEventListener('click',()=>decideCompletion(b.dataset.cid,b.dataset.cdecision)));
 }
 function decideRequest(id,status){
@@ -749,13 +782,20 @@ function submitCompletion(e){
  e.preventDefault();const form=$('completionForm');if(!form.checkValidity()){form.reportValidity();notify('completionNotice','Complete all required completion fields.','err');return}
  const req=byId(db.requests,$('completionRequest').value);if(!req||req.status!=='Approved'){notify('completionNotice','Select a currently approved request.','err');return}
  if(new Date($('completionDate').value)>new Date()){notify('completionNotice','Completion date cannot be in the future.','err');return}
+ const actualStartTime=$('actualStartTime').value,actualEndTime=$('actualEndTime').value;
+ if(!isThirtyMinuteTime(actualStartTime)||!isThirtyMinuteTime(actualEndTime)){notify('completionNotice','Select Actual Start Time and Actual End Time in 30-minute intervals.','err');return}
+ if(actualEndTime<=actualStartTime){notify('completionNotice','Actual End Time must be later than Actual Start Time.','err');return}
  const actual=Number($('actualHours').value);if(actual>80){notify('completionNotice','Actual hours cannot exceed 80 for one completion record.','err');return}
+ const actualWindowHours=(timeToMinutes(actualEndTime)-timeToMinutes(actualStartTime))/60;
+ if(actual>actualWindowHours){notify('completionNotice',`Actual hours (${actual}) cannot exceed the actual time window (${actualWindowHours} hours).`,'err');return}
+ const differences=completionVariance(req,{date:$('completionDate').value,startTime:actualStartTime,endTime:actualEndTime,hours:actual});
+ if(differences.length&&!$('completionNotes').value.trim()){notify('completionNotice','Explain why the actual date, time, or hours differ from the approved request.','err');$('completionNotes').focus();return}
  const file=$('certificateFile').files[0]||null;
- const id=uid('CMP');db.completions.push({id,requestId:req.id,employeeId:req.employeeId,divisionId:req.divisionId,sectionId:req.sectionId,completionDate:$('completionDate').value,actualHours:actual,certificateNumber:$('certificateNumber').value.trim(),certificateFileName:file?file.name:'',notes:$('completionNotes').value.trim(),status:'Submitted',completedApprover:''});
+ const id=uid('CMP');db.completions.push({id,requestId:req.id,employeeId:req.employeeId,divisionId:req.divisionId,sectionId:req.sectionId,completionDate:$('completionDate').value,actualStartTime,actualEndTime,actualHours:actual,hoursVariance:actual-Number(req.hours||0),hasVariance:differences.length>0,varianceSummary:differences.join(' '),certificateNumber:$('certificateNumber').value.trim(),certificateFileName:file?file.name:'',notes:$('completionNotes').value.trim(),status:'Submitted',completedApprover:''});
  req.status='Completion Submitted';
  const reviewGroupId=byId(db.sections,req.sectionId)?.defaultGroupId||'';
  activeMembers(reviewGroupId).filter(m=>m.canReviewCompletion).forEach(m=>notifySim(m.employeeId,'Completion review required',`${nameOf(db.employees,req.employeeId)} submitted completion details for ${req.id}.`,req.id));
- saveData();audit('Submitted','Training Completion',id);notify('completionNotice','Completion submitted for Completion Review.','ok');form.reset();renderAll();
+ saveData();audit('Submitted','Training Completion',id,differences.length?`Variance recorded: ${differences.join(' ')}`:'Actual completion matched approved request');notify('completionNotice',differences.length?'Completion submitted with variance details for Completion Review.':'Completion submitted. The actual details match the approved request.','ok');form.reset();renderAll();
 }
 
 function csv(name,rows){const text=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv;charset=utf-8'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),0)}
@@ -772,7 +812,7 @@ function performReset(){db=clone(seed);saveData();audit('Reset prototype data','
 function init(){
  populateLogin();
  populateTimeOptions();
- $('loginBtn').addEventListener('click',signIn);$('logoutBtn').addEventListener('click',logout);$('requestForm').addEventListener('submit',submitRequest);$('completionForm').addEventListener('submit',submitCompletion);$('chatForm').addEventListener('submit',submitChat);$('clearChatBtn').addEventListener('click',clearChat);document.querySelectorAll('[data-chat-question]').forEach(button=>button.addEventListener('click',()=>askChat(button.dataset.chatQuestion)));$('entityForm').addEventListener('submit',saveEntity);$('modalCloseBtn').addEventListener('click',closeModal);$('modalCancelBtn').addEventListener('click',closeModal);$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
+ $('loginBtn').addEventListener('click',signIn);$('logoutBtn').addEventListener('click',logout);$('requestForm').addEventListener('submit',submitRequest);$('completionForm').addEventListener('submit',submitCompletion);$('completionRequest').addEventListener('change',selectCompletionRequest);['completionDate','actualStartTime','actualEndTime','actualHours'].forEach(id=>$(id).addEventListener('input',renderCompletionComparison));$('chatForm').addEventListener('submit',submitChat);$('clearChatBtn').addEventListener('click',clearChat);document.querySelectorAll('[data-chat-question]').forEach(button=>button.addEventListener('click',()=>askChat(button.dataset.chatQuestion)));$('entityForm').addEventListener('submit',saveEntity);$('modalCloseBtn').addEventListener('click',closeModal);$('modalCancelBtn').addEventListener('click',closeModal);$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
  $('exportEmployeeBtn').addEventListener('click',exportEmployee);$('exportComplianceBtn').addEventListener('click',exportCompliance);$('exportRequestsBtn').addEventListener('click',exportRequests);$('exportRequestsAdminBtn').addEventListener('click',exportRequests);$('exportOrgBtn').addEventListener('click',exportOrganizations);$('exportApproversBtn').addEventListener('click',exportApprovers);$('exportEmployeesBtn').addEventListener('click',exportEmployees);$('backupBtn').addEventListener('click',backup);$('resetBtn').addEventListener('click',resetData);$('saveAllBtn').addEventListener('click',()=>{saveData();audit('Saved all changes','System','Local prototype storage');notify('adminNotice','All changes saved successfully.','ok')});
  document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('tab-'+b.dataset.tab).classList.add('active')}));
  renderAll();
