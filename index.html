@@ -3,7 +3,7 @@
   IDP Training App Demo
   Copyright © 2026 CP. All rights reserved.
   Designed and developed by CP for application design, demonstration, and project tracking.
-  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.3.
+  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.4.
 -->
 <html lang="en">
 <head>
@@ -12,7 +12,7 @@
 <meta name="author" content="CP">
 <meta name="copyright" content="Copyright 2026 CP. All rights reserved.">
 <meta name="application-name" content="IDP Training App Demo">
-<meta name="application-build" content="CP-IDP-2026-2.3">
+<meta name="application-build" content="CP-IDP-2026-2.4">
 <meta name="x-project-signature" content="CP26-IDP-7F3A">
 <title>IDP Training Management System</title>
 <style>
@@ -33,7 +33,8 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 .small{font-size:12px;color:var(--m)}.required::after{content:" *";color:var(--r)}
 .ownership{padding:14px 16px;color:var(--m);font-size:11px;line-height:1.55;border-top:1px solid var(--bd)}.ownership strong{color:var(--pd)}
 .progress-track{width:130px;height:9px;background:#e8edf5;border-radius:999px;overflow:hidden}.progress-fill{height:100%;background:var(--p);border-radius:999px}.progress-fill.done{background:var(--g)}
-@media(max-width:980px){.app{grid-template-columns:1fr}aside{position:relative;height:auto}.metrics,.two,.three,.form-grid{grid-template-columns:1fr 1fr}}@media(max-width:680px){.login-card,.metrics,.two,.three,.form-grid{grid-template-columns:1fr}.page{padding:17px}}
+.chat-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px}.chat-window{height:420px;overflow:auto;background:#f8fafc;border:1px solid var(--bd);border-radius:10px;padding:16px}.chat-message{display:flex;margin:9px 0}.chat-message.employee{justify-content:flex-end}.chat-bubble{max-width:82%;padding:10px 13px;border-radius:12px;line-height:1.45;white-space:pre-wrap}.chat-message.bot .chat-bubble{background:#eaf8fd;border:1px solid #bfe8f7;color:#173675}.chat-message.employee .chat-bubble{background:var(--p);color:#fff}.chat-form{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:12px}.quick-question{width:100%;margin:4px 0;text-align:left}
+@media(max-width:980px){.app{grid-template-columns:1fr}aside{position:relative;height:auto}.metrics,.two,.three,.form-grid{grid-template-columns:1fr 1fr}.chat-layout{grid-template-columns:1fr}}@media(max-width:680px){.login-card,.metrics,.two,.three,.form-grid{grid-template-columns:1fr}.page{padding:17px}.chat-form{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -54,7 +55,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
       <div class="field"><label>Division</label><select id="loginDivision"></select></div>
       <div class="field"><label>Section</label><select id="loginSection"></select></div>
       <button class="btn primary" style="width:100%;margin-top:18px" id="loginBtn">Continue to App</button>
-      <div class="small" style="text-align:center;margin-top:14px">App version 2.3<br>Last updated July 20, 2026 at 1:24 PM PT</div>
+      <div class="small" style="text-align:center;margin-top:14px">App version 2.4<br>Last updated July 20, 2026 at 1:47 PM PT</div>
       <div class="small" style="text-align:center;margin-top:10px">© 2026 IDP Training App Demo</div>
     </div>
   </div>
@@ -67,7 +68,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <nav id="nav"></nav>
   <div class="org"><b>Organization</b><small id="sideDivision"></small><small id="sideSection"></small></div>
   <div class="year"><b>Active Program Year</b><small>Jul 1, 2026 – Jun 30, 2027</small><small>Target: 80 Hours</small></div>
-  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.3</div>
+  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.4</div>
 </aside>
 <main>
 <header><strong>IDP Training Management System</strong><div class="actions"><span id="headerUser"></span><button class="btn light" id="logoutBtn">Sign Out</button></div></header>
@@ -113,6 +114,25 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
     <div class="field"><label>Certificate File</label><input id="certificateFile" type="file" accept=".pdf,.png,.jpg,.jpeg"></div>
     <div class="field full"><label>Completion Notes</label><textarea id="completionNotes" maxlength="2000"></textarea></div>
   </div><button class="btn success" style="margin-top:16px" type="submit">Submit Completion</button></form></div>
+</section>
+
+<section class="page" id="employee-chat">
+  <div class="row"><div><h2>Employee Chatbot</h2><div class="subtitle">Ask for help with IDP requests, approvals, returned records, completion reporting, and training progress.</div></div><button class="btn light" id="clearChatBtn" type="button">Clear Chat</button></div>
+  <div class="chat-layout" style="margin-top:16px">
+    <div class="card">
+      <div class="chat-window" id="chatWindow" aria-live="polite"><div class="chat-message bot"><div class="chat-bubble">Hello! I am the IDP Employee Help Bot. I can explain the demo workflow and summarize your current IDP records. How can I help?</div></div></div>
+      <form class="chat-form" id="chatForm"><input id="chatInput" maxlength="300" autocomplete="off" placeholder="Example: Why was my request returned?" aria-label="Chat question" required><button class="btn primary" type="submit">Send</button></form>
+      <div class="small" style="margin-top:9px">Demo assistant: responses are generated locally from app data and approved help topics. Do not enter confidential or sensitive information.</div>
+    </div>
+    <div class="card"><h3>Quick Questions</h3>
+      <button class="btn outline quick-question" type="button" data-chat-question="What is my training progress?">My training progress</button>
+      <button class="btn outline quick-question" type="button" data-chat-question="What is the status of my requests?">My request status</button>
+      <button class="btn outline quick-question" type="button" data-chat-question="How do I edit and resubmit a returned request?">Edit a returned request</button>
+      <button class="btn outline quick-question" type="button" data-chat-question="How do I submit training completion?">Submit completion</button>
+      <button class="btn outline quick-question" type="button" data-chat-question="Who approves my request?">Who approves?</button>
+      <button class="btn outline quick-question" type="button" data-chat-question="How do I cancel a request?">Cancel a request</button>
+    </div>
+  </div>
 </section>
 
 <section class="page" id="section-dashboard">
@@ -170,7 +190,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 'use strict';
 
 // Internal provenance marker for future source verification; intentionally not rendered in the UI.
-const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.3'});
+const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.4'});
 
 const STORAGE_KEY='idpDivisionSectionPublicDemoV2';
 const seed={
@@ -215,7 +235,7 @@ let db=loadData();
 let current={name:'Alex Morgan',email:'alex.morgan@example.com',role:'Administrator',divisionId:'DIV1',sectionId:'SEC1'};
 
 const navMap={
- Employee:[['Dashboard','dashboard'],['My Training Progress','compliance-dashboard'],['New Request','new-request'],['My Requests','my-requests'],['Complete Training','complete-training']],
+ Employee:[['Dashboard','dashboard'],['Employee Chatbot','employee-chat'],['My Training Progress','compliance-dashboard'],['New Request','new-request'],['My Requests','my-requests'],['Complete Training','complete-training']],
  'Section Supervisor':[['Section Dashboard','section-dashboard'],['Training Compliance','compliance-dashboard'],['Request Approvals','approver'],['Completion Reviews','approver']],
  'Division Supervisor':[['Division Dashboard','division-dashboard'],['Training Compliance','compliance-dashboard'],['Approval Overview','approver'],['Executive Reports','reports']],
  Approver:[['Approval Queue','approver'],['My Requests','my-requests']],
@@ -286,6 +306,7 @@ function buildNav(){
  showPage(items[0][1],$('nav').querySelector('button'));
 }
 function showPage(id,button){
+ if(id==='employee-chat'&&current.role!=='Employee'){alert('The Employee Chatbot is available only to the Employee role.');return}
  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));if(button)button.classList.add('active');
  if(id==='dashboard')renderRequests();
 }
@@ -300,6 +321,40 @@ function renderAll(){
  $('requestApprovalGroup').value=nameOf(db.groups,sec?.defaultGroupId)||'Not configured';
  renderRequests();renderDashboards();renderCompliance();renderApprovals();renderAdmin();renderReferenceSelects();
 }
+
+function chatResponse(question){
+ const q=String(question||'').trim().toLowerCase();
+ const employee=getCurrentEmployee();
+ if(!employee)return 'I cannot find an employee profile for the signed-in email. Please contact an administrator to verify your employee record.';
+ const mine=db.requests.filter(r=>r.employeeId===employee.id);
+ if(/hello|hi|good morning|good afternoon|help/.test(q))return 'Hello '+employee.name+'! You can ask about your progress, request status, approvals, returned requests, cancellations, or completion reporting.';
+ if(/progress|hour|target|compliance/.test(q)){
+  const p=employeeProgress(employee);return `Your annual target is ${p.target} hours. You have ${p.completed} approved completed hours, ${p.remaining} hours remaining, and ${p.percent}% progress.`;
+ }
+ if(/status|request/.test(q)&&!/returned|resubmit|new request|submit request|cancel|approv/.test(q)){
+  if(!mine.length)return 'You do not have any training requests yet. Open New Request to create one.';
+  const counts={};mine.forEach(r=>counts[r.status]=(counts[r.status]||0)+1);return 'Your request summary: '+Object.entries(counts).map(([status,count])=>`${status}: ${count}`).join(' · ')+'. Open My Requests for details.';
+ }
+ if(/return|resubmit|edit/.test(q)){
+  const returned=mine.filter(r=>r.status==='Returned');
+  return returned.length?`You have ${returned.length} returned request(s). Open My Requests, read the return reason, select Edit & Resubmit, correct the record, and submit it for approval again.`:'You currently have no returned requests. If an approver returns one, the required reason will appear in My Requests and the Edit & Resubmit button will become available.';
+ }
+ if(/complete|certificate|actual/.test(q))return 'After training is approved and completed, open Complete Training. Select the approved request, enter the completion date and actual hours, attach certificate information if available, and submit it for Completion Review.';
+ if(/who.*approv|approv|routing/.test(q)){
+  const section=byId(db.sections,employee.sectionId),group=nameOf(db.groups,section?.defaultGroupId);return group?`Your request routes to ${group}, based on your Section. High-cost or special requests may also require Division escalation.`:'Your Section does not currently have an approval group configured. Please contact an administrator.';
+ }
+ if(/cancel/.test(q))return 'Open My Requests and select Cancel for a Pending or Returned request. A cancellation reason is required. Approved, completed, rejected, or already cancelled records cannot be cancelled by the employee.';
+ if(/new|submit|create/.test(q))return 'Open New Request, complete the training title, platform, date, 30-minute start and end times, requested hours, cost, and business justification, then select Submit Request.';
+ if(/reason|why/.test(q))return 'Open My Requests and check Reason / Note. Return, reject, and cancellation decisions require a recorded reason. If no reason appears, contact your Section approval group.';
+ return 'I can help with: training progress, request status, new requests, approval routing, returned-request editing, cancellations, and completion reporting. Try one of the Quick Questions.';
+}
+
+function addChatMessage(text,actor){
+ const row=document.createElement('div');row.className=`chat-message ${actor}`;const bubble=document.createElement('div');bubble.className='chat-bubble';bubble.textContent=text;row.appendChild(bubble);$('chatWindow').appendChild(row);$('chatWindow').scrollTop=$('chatWindow').scrollHeight;
+}
+function askChat(question){const text=String(question||'').trim();if(!text)return;addChatMessage(text,'employee');setTimeout(()=>addChatMessage(chatResponse(text),'bot'),120)}
+function submitChat(e){e.preventDefault();const input=$('chatInput'),question=input.value;input.value='';askChat(question);input.focus()}
+function clearChat(){$('chatWindow').innerHTML='';addChatMessage('Hello! I am the IDP Employee Help Bot. How can I help with your IDP today?','bot')}
 
 function employeeProgress(employee){
  const requests=db.requests.filter(r=>r.employeeId===employee.id);
@@ -567,7 +622,7 @@ function resetData(){if(!confirm('Reset all prototype changes to the original sa
 function init(){
  populateLogin();
  populateTimeOptions();
- $('loginBtn').addEventListener('click',signIn);$('logoutBtn').addEventListener('click',logout);$('requestForm').addEventListener('submit',submitRequest);$('completionForm').addEventListener('submit',submitCompletion);$('entityForm').addEventListener('submit',saveEntity);$('modalCloseBtn').addEventListener('click',closeModal);$('modalCancelBtn').addEventListener('click',closeModal);$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
+ $('loginBtn').addEventListener('click',signIn);$('logoutBtn').addEventListener('click',logout);$('requestForm').addEventListener('submit',submitRequest);$('completionForm').addEventListener('submit',submitCompletion);$('chatForm').addEventListener('submit',submitChat);$('clearChatBtn').addEventListener('click',clearChat);document.querySelectorAll('[data-chat-question]').forEach(button=>button.addEventListener('click',()=>askChat(button.dataset.chatQuestion)));$('entityForm').addEventListener('submit',saveEntity);$('modalCloseBtn').addEventListener('click',closeModal);$('modalCancelBtn').addEventListener('click',closeModal);$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
  $('exportEmployeeBtn').addEventListener('click',exportEmployee);$('exportComplianceBtn').addEventListener('click',exportCompliance);$('exportRequestsBtn').addEventListener('click',exportRequests);$('exportRequestsAdminBtn').addEventListener('click',exportRequests);$('exportOrgBtn').addEventListener('click',exportOrganizations);$('exportApproversBtn').addEventListener('click',exportApprovers);$('exportEmployeesBtn').addEventListener('click',exportEmployees);$('backupBtn').addEventListener('click',backup);$('resetBtn').addEventListener('click',resetData);$('saveAllBtn').addEventListener('click',()=>{saveData();audit('Saved all changes','System','Local prototype storage');notify('adminNotice','All changes saved successfully.','ok')});
  document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('tab-'+b.dataset.tab).classList.add('active')}));
  renderAll();
