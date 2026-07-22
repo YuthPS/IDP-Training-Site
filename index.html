@@ -3,7 +3,7 @@
   IDP Training App Demo
   Copyright © 2026 CP. All rights reserved.
   Designed and developed by CP for application design, demonstration, and project tracking.
-  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.6.
+  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.8.
 -->
 <html lang="en">
 <head>
@@ -12,7 +12,7 @@
 <meta name="author" content="CP">
 <meta name="copyright" content="Copyright 2026 CP. All rights reserved.">
 <meta name="application-name" content="IDP Training App Demo">
-<meta name="application-build" content="CP-IDP-2026-2.6">
+<meta name="application-build" content="CP-IDP-2026-2.8">
 <meta name="x-project-signature" content="CP26-IDP-7F3A">
 <title>IDP Training Management System</title>
 <style>
@@ -35,6 +35,8 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 .progress-track{width:130px;height:9px;background:#e8edf5;border-radius:999px;overflow:hidden}.progress-fill{height:100%;background:var(--p);border-radius:999px}.progress-fill.done{background:var(--g)}
 .chat-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px}.chat-window{height:420px;overflow:auto;background:#f8fafc;border:1px solid var(--bd);border-radius:10px;padding:16px}.chat-message{display:flex;margin:9px 0}.chat-message.employee{justify-content:flex-end}.chat-bubble{max-width:82%;padding:10px 13px;border-radius:12px;line-height:1.45;white-space:pre-wrap}.chat-message.bot .chat-bubble{background:#eaf8fd;border:1px solid #bfe8f7;color:#173675}.chat-message.employee .chat-bubble{background:var(--p);color:#fff}.chat-form{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:12px}.quick-question{width:100%;margin:4px 0;text-align:left}
 .comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.comparison-panel{border:1px solid var(--bd);border-radius:10px;padding:14px;background:#f8fafc}.comparison-panel h4{margin:0 0 10px;color:var(--p)}.comparison-line{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--bd)}.comparison-line:last-child{border-bottom:0}.comparison-line span{color:var(--m)}.variance-summary{margin-top:12px;padding:11px 13px;border-radius:8px;font-weight:600}.variance-summary.match{background:#e8f7ec;color:#146a31}.variance-summary.changed{background:#fff2bd;color:#715600}.variance-list{margin:7px 0 0;padding-left:19px;font-weight:400}
+.workflow-route{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:700;color:var(--p)}.workflow-node{background:#fff;border:1px solid var(--charcoal);border-radius:7px;padding:8px 10px}.workflow-arrow{color:var(--charcoal);font-size:18px}.workflow-phase{display:inline-block;padding:4px 8px;border-radius:5px;background:var(--gray);color:var(--charcoal);font-size:12px;font-weight:700}.table-scroll{overflow-x:auto}
+.mode-panel{margin-top:14px;padding:13px;border:1px solid var(--bd);border-radius:10px;background:#f8fafc}.mode-panel .field{margin-top:9px}.uat-warning{margin-top:10px;padding:9px 11px;border-left:4px solid var(--gold);background:#fff8dc;color:#5f4b00;font-size:12px;line-height:1.45}.connection-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700;background:var(--gray);color:var(--charcoal)}.connection-pill::before{content:'';width:8px;height:8px;border-radius:50%;background:#8b8d90}.connection-pill.online{background:#e8f7ec;color:#146a31}.connection-pill.online::before{background:#20a653}.connection-pill.syncing{background:#fff2bd;color:#715600}.connection-pill.syncing::before{background:#d39d00}.connection-pill.error{background:#fde8e8;color:#9b1c1c}.connection-pill.error::before{background:#d84c4c}.sync-detail{font-size:11px;color:var(--m)}
 @media(max-width:980px){.app{grid-template-columns:1fr}aside{position:relative;height:auto}.metrics,.two,.three,.form-grid{grid-template-columns:1fr 1fr}.chat-layout{grid-template-columns:1fr}}@media(max-width:680px){.login-card,.metrics,.two,.three,.form-grid,.comparison-grid{grid-template-columns:1fr}.page{padding:17px}.chat-form{grid-template-columns:1fr}}
 </style>
 </head>
@@ -50,15 +52,26 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
     </div>
     <div class="login-form">
       <h2>Welcome to IDP Portal</h2><div class="subtitle">Prototype login — your role is derived from your employee record (simulates Entra ID sign-in)</div>
+      <div class="field"><label>Data Mode</label><select id="dataMode"><option value="local">Local Demo — this browser only</option><option value="shared">Shared UAT — synchronized test data</option></select></div>
+      <div id="localLoginFields">
       <div class="field"><label>Demo Account</label><select id="loginAccount"></select></div>
+      </div>
       <div class="field"><label class="required">Full Name</label><input id="loginName" value="Alex Morgan" required></div>
       <div class="field"><label class="required">Work Email</label><input id="loginEmail" type="email" value="alex.morgan@example.com" required></div>
+      <div id="sharedLoginFields" class="mode-panel hidden">
+        <b>Shared UAT Connection</b>
+        <div class="field"><label class="required">Supabase Project URL</label><input id="uatProjectUrl" type="url" placeholder="https://your-project.supabase.co"></div>
+        <div class="field"><label class="required">Supabase Publishable Key</label><input id="uatPublishableKey" type="password" autocomplete="off" placeholder="Publishable / anon key — never service_role"></div>
+        <div class="field"><label class="required">UAT Password</label><input id="uatPassword" type="password" autocomplete="current-password"></div>
+        <div class="uat-warning"><b>Fictional UAT data only.</b> Do not enter real employee or confidential information. Never paste a service-role key or database password into this page.</div>
+        <details style="margin-top:10px"><summary><b>First-time setup</b></summary><ol class="small" style="line-height:1.6;padding-left:20px"><li>Create a Supabase project.</li><li>Run the supplied <code>SUPABASE_UAT_SETUP.sql</code> in the SQL Editor.</li><li>Create test users in Authentication.</li><li>Enter the Project URL and publishable key here.</li><li>Each test user signs in from a separate browser or device.</li></ol></details>
+      </div>
       <div class="field"><label>Division (new profiles only)</label><select id="loginDivision"></select></div>
       <div class="field"><label>Section (new profiles only)</label><select id="loginSection"></select></div>
       <div class="small" style="margin-top:10px">Unknown emails create a new profile with the Employee role. Only an Administrator can change roles.</div>
       <div id="loginNotice" class="notice" style="margin-top:10px;margin-bottom:0"></div>
       <button class="btn primary" style="width:100%;margin-top:18px" id="loginBtn">Continue to App</button>
-      <div class="small" style="text-align:center;margin-top:14px">App version 2.6<br>Last updated July 20, 2026</div>
+      <div class="small" style="text-align:center;margin-top:14px">App version 2.9<br>Last updated July 22, 2026</div>
       <div class="small" style="text-align:center;margin-top:10px">© 2026 IDP Training App Demo</div>
     </div>
   </div>
@@ -71,10 +84,10 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <nav id="nav"></nav>
   <div class="org"><b>Organization</b><small id="sideDivision"></small><small id="sideSection"></small></div>
   <div class="year"><b>Active Program Year</b><small>Jul 1, 2026 – Jun 30, 2027</small><small>Target: 80 Hours</small></div>
-  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.6</div>
+  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.9</div>
 </aside>
 <main>
-<header><strong>IDP Training Management System</strong><div class="actions"><span id="headerUser"></span><button class="btn light" id="logoutBtn">Sign Out</button></div></header>
+<header><div><strong>IDP Training Management System</strong><div class="sync-detail" id="syncDetail">Local browser data</div></div><div class="actions"><span class="connection-pill" id="connectionStatus">Local Demo</span><span id="headerUser"></span><button class="btn light" id="refreshSharedBtn" type="button" title="Refresh shared UAT data">Refresh</button><button class="btn light" id="logoutBtn">Sign Out</button></div></header>
 
 <section class="page active" id="dashboard">
   <div class="row"><div><h2>Employee Dashboard</h2><div class="subtitle">Training progress for the active program year.</div></div><button class="btn light" id="exportEmployeeBtn">Export</button></div>
@@ -176,6 +189,70 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <div class="card" style="margin-top:16px"><h3>Employee Completion Report</h3><table><thead><tr><th>Employee</th><th>Division</th><th>Section</th><th>Latest Training Date</th><th>Target</th><th>Completed</th><th>Remaining</th><th>Progress</th><th>Compliance</th></tr></thead><tbody id="complianceRows"></tbody></table></div>
 </section>
 
+<section class="page" id="system-workflow">
+  <div class="row"><div><h2>System Workflow</h2><div class="subtitle">Canonical end-to-end workflow synchronized with the Excel schema and Power Apps implementation guide.</div></div></div>
+  <div class="card" style="margin-top:16px">
+    <h3>Process Summary</h3>
+    <div class="workflow-route" aria-label="System workflow summary">
+      <span class="workflow-node">Employee</span><span class="workflow-arrow">→</span><span class="workflow-node">Power Apps</span><span class="workflow-arrow">→</span><span class="workflow-node">Central Data Source</span><span class="workflow-arrow">→</span><span class="workflow-node">Section Approval Group</span><span class="workflow-arrow">→</span><span class="workflow-node">Division Approval (Conditional)</span><span class="workflow-arrow">→</span><span class="workflow-node">Completion Review</span><span class="workflow-arrow">→</span><span class="workflow-node">Compliance Dashboard</span><span class="workflow-arrow">→</span><span class="workflow-node">Audit &amp; Annual Rollover</span>
+    </div>
+  </div>
+  <div class="card table-scroll" style="margin-top:16px">
+    <h3>Dataverse for Teams — Reduced 13-Table Model</h3>
+    <p class="subtitle">The application behavior is unchanged. Related setup data is consolidated to reduce maintenance while preserving Division/Section routing, approvals, completions, reporting, notifications, and audit history.</p>
+    <table><thead><tr><th>#</th><th>Dataverse Table</th><th>Purpose</th><th>Consolidation</th></tr></thead><tbody>
+      <tr><td>1</td><td>IDP Organization Unit</td><td>Division and Section hierarchy, supervisor, and default approval group.</td><td>Replaces separate Division and Section tables.</td></tr>
+      <tr><td>2</td><td>IDP Employee</td><td>Microsoft 365 identity, organization assignment, and app role.</td><td>Role is a Choice on Employee.</td></tr>
+      <tr><td>3</td><td>IDP Program Year</td><td>Annual dates, default target, escalation threshold, and default times.</td><td>Includes former system settings.</td></tr>
+      <tr><td>4</td><td>IDP Employee Target</td><td>Employee-specific target by Program Year.</td><td>Preserves historical annual targets.</td></tr>
+      <tr><td>5</td><td>IDP Reference Value</td><td>Platform, Class Type, and Category values.</td><td>Replaces three reference tables.</td></tr>
+      <tr><td>6</td><td>IDP Approval Group</td><td>Section/Division scope and approval method.</td><td>Unchanged business function.</td></tr>
+      <tr><td>7</td><td>IDP Approval Group Member</td><td>Approver membership, order, and completion-review permission.</td><td>Unchanged business function.</td></tr>
+      <tr><td>8</td><td>IDP Training Session</td><td>Optional scheduled offerings and capacity.</td><td>Supports reusable sessions.</td></tr>
+      <tr><td>9</td><td>IDP Training Request</td><td>Employee request, planned values, routing snapshots, status, and correction tracking.</td><td>Core transaction.</td></tr>
+      <tr><td>10</td><td>IDP Approval</td><td>Section, Division, and Completion decisions with required reasons.</td><td>One decision-history table.</td></tr>
+      <tr><td>11</td><td>IDP Training Completion</td><td>Actual date/time/hours, variance, certificate, and review status.</td><td>Includes former Certificate table.</td></tr>
+      <tr><td>12</td><td>IDP Notification</td><td>In-app/email notification queue and delivery state.</td><td>Unchanged business function.</td></tr>
+      <tr><td>13</td><td>IDP Audit Log</td><td>Actor, timestamp, reason, and previous/new values.</td><td>Custom audit retained.</td></tr>
+    </tbody></table>
+  </div>
+  <div class="card table-scroll" style="margin-top:16px">
+    <table><thead><tr><th>Step</th><th>Phase</th><th>Actor</th><th>Action</th><th>Decision / Control</th><th>Next Status / Route</th></tr></thead><tbody>
+      <tr><td>1</td><td><span class="workflow-phase">Planning</span></td><td>Employee</td><td>Identify a training need that supports the Individual Development Plan.</td><td>Training must have a valid business purpose.</td><td>Open New Training Request.</td></tr>
+      <tr><td>2</td><td><span class="workflow-phase">Request</span></td><td>Employee</td><td>Enter training title, platform, class type, category, date, start/end time, requested hours, cost, and justification.</td><td>Required fields must be complete.</td><td>Draft request is ready for validation.</td></tr>
+      <tr><td>3</td><td><span class="workflow-phase">Request</span></td><td>Power Apps</td><td>Validate active Program Year, required fields, 30-minute times, End &gt; Start, and Requested Hours ≤ selected time window.</td><td>Invalid data is blocked with a field message.</td><td>Valid request continues.</td></tr>
+      <tr><td>4</td><td><span class="workflow-phase">Request</span></td><td>App / Data Source</td><td>Generate Request ID, timestamp, organization snapshot, and audit record; save the request.</td><td>Request ID must be unique.</td><td>Status = Pending Section Approval.</td></tr>
+      <tr><td>5</td><td><span class="workflow-phase">Section Approval</span></td><td>Automation</td><td>Resolve the active Section Approval Group, create eligible reviewer records, and notify members.</td><td>A configured active group is required.</td><td>Route to Section Approval Queue.</td></tr>
+      <tr><td>6</td><td><span class="workflow-phase">Section Approval</span></td><td>Section Approver</td><td>Review the request, justification, planned date/time, hours, cost, and employee scope.</td><td>Membership, priority, and Any One / All / Sequential method are enforced.</td><td>Approve, Return, or Reject.</td></tr>
+      <tr><td>7A</td><td><span class="workflow-phase">Correction</span></td><td>Section Approver</td><td>Return the request to the employee.</td><td>A return reason is required.</td><td>Status = Returned; employee notified.</td></tr>
+      <tr><td>7B</td><td><span class="workflow-phase">Correction</span></td><td>Employee</td><td>Edit the returned record and resubmit it.</td><td>Owner only; all validation repeats; before/after values are audited.</td><td>Status = Pending; return to Step 5.</td></tr>
+      <tr><td>7C</td><td><span class="workflow-phase">Closure</span></td><td>Section Approver</td><td>Reject the request.</td><td>A rejection reason is required.</td><td>Status = Rejected; employee notified.</td></tr>
+      <tr><td>7D</td><td><span class="workflow-phase">Closure</span></td><td>Employee</td><td>Cancel an eligible Pending, Pending Division Approval, or Returned request.</td><td>A cancellation reason is required.</td><td>Status = Cancelled; audit and notification recorded.</td></tr>
+      <tr><td>8</td><td><span class="workflow-phase">Section Approval</span></td><td>Approval Group</td><td>Complete the Section approval stage according to the configured method.</td><td>Required Section approvals must be complete.</td><td>Evaluate Division escalation.</td></tr>
+      <tr><td>9</td><td><span class="workflow-phase">Division Check</span></td><td>System</td><td>Determine whether Division escalation is required.</td><td>HTML rule: estimated cost ≥ $1,000 and an active Division group exists.</td><td>Yes → Step 10; No → Step 13.</td></tr>
+      <tr><td>10</td><td><span class="workflow-phase">Division Approval</span></td><td>Automation</td><td>Create the Division approval stage and notify eligible Division approvers.</td><td>Active Division group and eligible members are required.</td><td>Status = Pending Division Approval.</td></tr>
+      <tr><td>11</td><td><span class="workflow-phase">Division Approval</span></td><td>Division Approver</td><td>Review the Section decision and the escalated request.</td><td>Membership and approval method are enforced.</td><td>Approve, Return, or Reject.</td></tr>
+      <tr><td>12A</td><td><span class="workflow-phase">Correction</span></td><td>Division Approver</td><td>Return the request with a reason.</td><td>Employee must correct and resubmit through Section review again.</td><td>Status = Returned; return to Step 2/5.</td></tr>
+      <tr><td>12B</td><td><span class="workflow-phase">Closure</span></td><td>Division Approver</td><td>Reject the request with a reason.</td><td>Reason and decision audit are required.</td><td>Status = Rejected; employee notified.</td></tr>
+      <tr><td>12C</td><td><span class="workflow-phase">Division Approval</span></td><td>Division Approver</td><td>Approve the escalation.</td><td>Configured approval method must be complete.</td><td>Continue to final approval.</td></tr>
+      <tr><td>13</td><td><span class="workflow-phase">Approved</span></td><td>System</td><td>Set the request to Approved and notify the employee and approval group.</td><td>All required approval stages are complete.</td><td>Employee attends training.</td></tr>
+      <tr><td>14</td><td><span class="workflow-phase">Training</span></td><td>Employee</td><td>Attend and complete the approved training.</td><td>Only an Approved request can be completed.</td><td>Open Complete Training.</td></tr>
+      <tr><td>15</td><td><span class="workflow-phase">Completion</span></td><td>Employee</td><td>Select the Approved Request.</td><td>Employee owns the request and status is Approved.</td><td>Load the approved comparison baseline.</td></tr>
+      <tr><td>16</td><td><span class="workflow-phase">Completion</span></td><td>Power Apps</td><td>Default actual date, start time, end time, and hours from the approved request.</td><td>Employee may change actual values.</td><td>Display Approved Request vs Actual Completion.</td></tr>
+      <tr><td>17</td><td><span class="workflow-phase">Completion</span></td><td>Employee</td><td>Enter actual completion date, actual start/end time, actual hours, certificate, and notes.</td><td>Actual times use 30-minute intervals.</td><td>Run comparison.</td></tr>
+      <tr><td>18</td><td><span class="workflow-phase">Comparison</span></td><td>Power Apps</td><td>Compare approved and actual date, start time, end time, and hours.</td><td>Every difference is listed; Hours Variance = Actual − Requested.</td><td>Match confirmed or Variance found.</td></tr>
+      <tr><td>19</td><td><span class="workflow-phase">Variance</span></td><td>Employee</td><td>Provide a variance explanation when any actual value differs.</td><td>Explanation is mandatory when Has Variance = Yes.</td><td>Ready for completion submission.</td></tr>
+      <tr><td>20</td><td><span class="workflow-phase">Completion</span></td><td>App / Automation</td><td>Revalidate actual time/hours, save completion and variance fields, write audit history, and notify reviewers.</td><td>Actual End &gt; Start; Actual Hours ≤ actual time window; variance explanation present.</td><td>Status = Completion Submitted.</td></tr>
+      <tr><td>21</td><td><span class="workflow-phase">Completion Review</span></td><td>Automation</td><td>Route the submission to eligible completion reviewers in the same Section Approval Group.</td><td>Can Review Completion permission is required.</td><td>Reviewer notified.</td></tr>
+      <tr><td>22</td><td><span class="workflow-phase">Completion Review</span></td><td>Completion Reviewer</td><td>View approved and actual values side by side, the variance summary, explanation, and evidence.</td><td>Reviewer eligibility is rechecked.</td><td>Approve, Return, or Reject.</td></tr>
+      <tr><td>23A</td><td><span class="workflow-phase">Completion Correction</span></td><td>Completion Reviewer</td><td>Return or reject the completion with a reason.</td><td>Reason is required; parent request returns to Approved.</td><td>Employee corrects and resubmits from Step 17.</td></tr>
+      <tr><td>23B</td><td><span class="workflow-phase">Completed</span></td><td>Completion Reviewer</td><td>Approve completion and actual hours.</td><td>Only approved Actual Hours count toward compliance.</td><td>Request Status = Completed.</td></tr>
+      <tr><td>24</td><td><span class="workflow-phase">Reporting</span></td><td>System</td><td>Update Employee Dashboard, Recent Requests, compliance, Division, and Executive reporting.</td><td>Use approved actual completion data.</td><td>Reports refreshed.</td></tr>
+      <tr><td>25</td><td><span class="workflow-phase">Audit &amp; Rollover</span></td><td>Administrator / System</td><td>Retain request, decision, completion, variance, notification, and correction history; perform approved annual rollover.</td><td>Historical records are retained and not deleted.</td><td>Lifecycle complete.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
 <section class="page" id="admin">
   <div class="row"><div><h2>Administrator Dashboard</h2><div class="subtitle">Full create, edit, activate/deactivate, validation, audit, and export functions.</div></div><button class="btn primary" id="saveAllBtn">Save All Changes</button></div>
   <div id="adminNotice" class="notice"></div>
@@ -203,10 +280,32 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 'use strict';
 
 // Internal provenance marker for future source verification; intentionally not rendered in the UI.
-const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.6'});
+const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.9'});
 
-const STORAGE_KEY='idpDivisionSectionPublicDemoV3';
+// Canonical Dataverse for Teams deployment model. The HTML prototype keeps its
+// compact client-side collections as compatibility views for the same 13 tables.
+const DATAVERSE_TABLES=Object.freeze([
+ 'IDP Organization Unit','IDP Employee','IDP Program Year','IDP Employee Target',
+ 'IDP Reference Value','IDP Approval Group','IDP Approval Group Member',
+ 'IDP Training Session','IDP Training Request','IDP Approval',
+ 'IDP Training Completion','IDP Notification','IDP Audit Log'
+]);
+
+const STORAGE_KEY='idpDivisionSectionPublicDemoV4';
+const UAT_CONFIG_KEY='idpSharedUatConfigV1';
+const UAT_SESSION_KEY='idpSharedUatSessionV1';
+const UAT_STATE_ID='primary';
+const UAT_POLL_MS=5000;
 const seed={
+ schemaVersion:'2.9-13-table',
+ dataverseTables:[...DATAVERSE_TABLES],
+ organizationUnits:[
+  {id:'OU-DIV1',name:'Operations Division',code:'OPS',unitType:'Division',parentUnitId:'',supervisorEmployeeId:'EMP3',defaultApprovalGroupId:'GRP2',active:true},
+  {id:'OU-DIV2',name:'Technology Division',code:'TECH',unitType:'Division',parentUnitId:'',supervisorEmployeeId:'',defaultApprovalGroupId:'',active:true},
+  {id:'OU-SEC1',name:'Learning Services',code:'LEARN',unitType:'Section',parentUnitId:'OU-DIV1',supervisorEmployeeId:'EMP2',defaultApprovalGroupId:'GRP1',active:true},
+  {id:'OU-SEC2',name:'Administrative Services',code:'ADMIN',unitType:'Section',parentUnitId:'OU-DIV1',supervisorEmployeeId:'',defaultApprovalGroupId:'',active:true},
+  {id:'OU-SEC3',name:'Customer Support',code:'SUPPORT',unitType:'Section',parentUnitId:'OU-DIV1',supervisorEmployeeId:'',defaultApprovalGroupId:'',active:true}
+ ],
  divisions:[
   {id:'DIV1',name:'Operations Division',code:'OPS',supervisorId:'EMP3',defaultGroupId:'GRP2',active:true},
   {id:'DIV2',name:'Technology Division',code:'TECH',supervisorId:'',defaultGroupId:'',active:true}
@@ -233,37 +332,83 @@ const seed={
   {id:'MEM2',groupId:'GRP1',employeeId:'EMP4',role:'Alternate Approver',priority:2,canReviewCompletion:true,active:true},
   {id:'MEM3',groupId:'GRP2',employeeId:'EMP3',role:'Division Supervisor',priority:1,canReviewCompletion:true,active:true}
  ],
- years:[{id:'YR1',name:'FY 2026-27',start:'2026-07-01',end:'2027-06-30',targetHours:80,current:true,active:true}],
+ years:[{id:'YR1',name:'FY 2026-27',start:'2026-07-01',end:'2027-06-30',targetHours:80,divisionEscalationThreshold:1000,defaultStartTime:'08:00',defaultEndTime:'17:00',current:true,active:true}],
+ employeeTargets:[
+  {id:'TGT1',employeeId:'EMP1',programYearId:'YR1',targetHours:80,active:true},
+  {id:'TGT2',employeeId:'EMP2',programYearId:'YR1',targetHours:80,active:true},
+  {id:'TGT3',employeeId:'EMP3',programYearId:'YR1',targetHours:80,active:true},
+  {id:'TGT4',employeeId:'EMP4',programYearId:'YR1',targetHours:80,active:true},
+  {id:'TGT5',employeeId:'EMP5',programYearId:'YR1',targetHours:80,active:true},
+  {id:'TGT6',employeeId:'EMP6',programYearId:'YR1',targetHours:0,active:true}
+ ],
  platforms:[{id:'P1',name:'Microsoft Learn',active:true},{id:'P2',name:'LinkedIn Learning',active:true},{id:'P3',name:'Info-Tech',active:true}],
  classTypes:[{id:'C1',name:'Online',active:true},{id:'C2',name:'Instructor-Led',active:true}],
  categories:[{id:'CAT1',name:'Data Analytics',active:true},{id:'CAT2',name:'Application Development',active:true},{id:'CAT3',name:'Cybersecurity',active:true}],
+ referenceValues:[
+  {id:'REF-P1',name:'Microsoft Learn',referenceType:'Platform',code:'MSLEARN',active:true},
+  {id:'REF-P2',name:'LinkedIn Learning',referenceType:'Platform',code:'LINKEDIN',active:true},
+  {id:'REF-P3',name:'Info-Tech',referenceType:'Platform',code:'INFOTECH',active:true},
+  {id:'REF-C1',name:'Online',referenceType:'Class Type',code:'ONLINE',active:true},
+  {id:'REF-C2',name:'Instructor-Led',referenceType:'Class Type',code:'ILT',active:true},
+  {id:'REF-CAT1',name:'Data Analytics',referenceType:'Category',code:'DATA',active:true},
+  {id:'REF-CAT2',name:'Application Development',referenceType:'Category',code:'APPDEV',active:true},
+  {id:'REF-CAT3',name:'Cybersecurity',referenceType:'Category',code:'CYBER',active:true}
+ ],
  requests:[
-  {id:'REQ-1001',employeeId:'EMP1',title:'Power BI Data Modeling',platform:'Microsoft Learn',classType:'Online',category:'Data Analytics',justification:'Develop advanced reporting and data modeling skills.',divisionId:'DIV1',sectionId:'SEC1',trainingDate:'2026-07-08',startTime:'09:00',endTime:'17:00',hours:8,cost:0,status:'Completed',escalation:false,approvals:[]},
-  {id:'REQ-1002',employeeId:'EMP1',title:'Project Management Essentials',platform:'LinkedIn Learning',classType:'Online',category:'Application Development',justification:'Improve project planning and delivery skills.',divisionId:'DIV1',sectionId:'SEC1',trainingDate:'2026-08-12',startTime:'08:30',endTime:'16:30',hours:8,cost:0,status:'Approved',escalation:false,approvals:[]},
+  {id:'REQ-1001',employeeId:'EMP1',title:'Power BI Data Modeling',platform:'Microsoft Learn',classType:'Instructor-Led',category:'Data Analytics',justification:'Develop advanced reporting and data modeling skills.',divisionId:'DIV1',sectionId:'SEC1',trainingDate:'2026-07-08',startTime:'09:00',endTime:'17:00',hours:8,cost:0,status:'Completed',escalation:false,approvals:[{name:'Jordan Lee',stage:'Section',decision:'Approved',date:'2026-07-02T16:00:00Z'},{name:'Jordan Lee',stage:'Completion',decision:'Approved',date:'2026-07-09T16:00:00Z'}]},
+  {id:'REQ-1002',employeeId:'EMP1',title:'Project Management Essentials',platform:'LinkedIn Learning',classType:'Online',category:'Application Development',justification:'Improve project planning and delivery skills.',divisionId:'DIV1',sectionId:'SEC1',trainingDate:'2026-08-12',startTime:'08:30',endTime:'16:30',hours:8,cost:0,status:'Approved',escalation:false,approvals:[{name:'Casey Rivera',stage:'Section',decision:'Approved',date:'2026-07-11T16:00:00Z'}]},
   {id:'REQ-1003',employeeId:'EMP1',title:'Cybersecurity Refresher',platform:'Info-Tech',classType:'Online',category:'Cybersecurity',justification:'Maintain current cybersecurity awareness and compliance.',divisionId:'DIV1',sectionId:'SEC1',trainingDate:'2026-09-05',startTime:'10:00',endTime:'14:00',hours:4,cost:0,status:'Pending',escalation:false,approvals:[]}
  ],
- completions:[],
- notifications:[],
+ sessions:[
+  {id:'SES1',name:'Power BI Data Modeling - July',programYearId:'YR1',platformId:'REF-P1',classTypeId:'REF-C2',categoryId:'REF-CAT1',startDate:'2026-07-08',startTime:'09:00',endDate:'2026-07-08',endTime:'17:00',plannedHours:8,cost:0,capacity:25,active:true},
+  {id:'SES2',name:'Project Management Essentials - August',programYearId:'YR1',platformId:'REF-P2',classTypeId:'REF-C1',categoryId:'REF-CAT2',startDate:'2026-08-12',startTime:'08:30',endDate:'2026-08-12',endTime:'16:30',plannedHours:8,cost:0,capacity:100,active:true}
+ ],
+ approvalRecords:[
+  {id:'APR1',requestId:'REQ-1001',completionId:'',groupId:'GRP1',approverId:'EMP2',stage:'Section',approvalType:'Request',sequence:1,decision:'Approved',reason:'Approved for development plan',decisionDate:'2026-07-02T16:00:00Z',active:true},
+  {id:'APR2',requestId:'REQ-1001',completionId:'CMP1',groupId:'GRP1',approverId:'EMP2',stage:'Completion',approvalType:'Completion',sequence:1,decision:'Approved',reason:'Certificate and actual hours verified',decisionDate:'2026-07-09T16:00:00Z',active:true},
+  {id:'APR3',requestId:'REQ-1002',completionId:'',groupId:'GRP1',approverId:'EMP4',stage:'Section',approvalType:'Request',sequence:1,decision:'Approved',reason:'Approved',decisionDate:'2026-07-11T16:00:00Z',active:true}
+ ],
+ completions:[
+  {id:'CMP1',requestId:'REQ-1001',employeeId:'EMP1',divisionId:'DIV1',sectionId:'SEC1',completionDate:'2026-07-08',actualStartTime:'09:00',actualEndTime:'17:00',actualHours:8,hoursVariance:0,hasVariance:false,varianceSummary:'Match confirmed',certificateNumber:'CERT-DEMO-1001',certificateFileName:'power-bi-demo-certificate.pdf',notes:'Training completed as approved.',status:'Approved',completedApprover:'Jordan Lee'}
+ ],
+ notifications:[
+  {id:'NOT1',recipientId:'EMP2',toEmployeeId:'EMP2',toName:'Jordan Lee',requestId:'REQ-1003',regarding:'REQ-1003',title:'Training request requires review',subject:'Training request requires review',message:'REQ-1003 is waiting for Section approval.',body:'REQ-1003 is waiting for Section approval.',channel:'In App',status:'Read',createdAt:'2026-07-20T16:00:00Z',date:'2026-07-20T16:00:00Z',read:true},
+  {id:'NOT2',recipientId:'EMP1',toEmployeeId:'EMP1',toName:'Alex Morgan',requestId:'REQ-1002',regarding:'REQ-1002',title:'Training request approved',subject:'Training request approved',message:'Your request REQ-1002 was approved.',body:'Your request REQ-1002 was approved.',channel:'Email',status:'Sent',createdAt:'2026-07-11T16:00:00Z',date:'2026-07-11T16:00:00Z',read:false}
+ ],
  nextRequestNumber:1004,
- audit:[{date:'2026-07-16',action:'Organization model updated',entity:'System',record:'Division → Section → Employee',by:'Administrator'}]
+ audit:[
+  {date:'2026-07-20T16:00:00Z',action:'Submitted',entity:'Training Request',record:'REQ-1003',by:'Alex Morgan',note:'Initial employee submission',previousValues:'{}',newValues:'{"status":"Pending"}'},
+  {date:'2026-07-11T16:00:00Z',action:'Approved',entity:'Training Request',record:'REQ-1002',by:'Casey Rivera',note:'Approved',previousValues:'{"status":"Pending"}',newValues:'{"status":"Approved"}'},
+  {date:'2026-07-09T16:00:00Z',action:'Completed',entity:'Training Completion',record:'CMP1',by:'Jordan Lee',note:'Certificate and actual hours verified',previousValues:'{"status":"Submitted"}',newValues:'{"status":"Approved","actualHours":8}'}
+ ]
 };
 
 let db=loadData();
 let current={name:'Alex Morgan',email:'alex.morgan@example.com',role:'Employee',divisionId:'DIV1',sectionId:'SEC1'};
+let dataMode='local';
+let uatSession=null;
+let remoteVersion=0;
+let remoteUpdatedAt='';
+let remotePollTimer=null;
+let remoteSaveTimer=null;
+let remoteBusy=false;
+let remoteDirty=false;
+let suppressRemoteSave=false;
 
 const navMap={
- Employee:[['Dashboard','dashboard'],['Employee Chatbot','employee-chat'],['My Training Progress','compliance-dashboard'],['New Request','new-request'],['My Requests','my-requests'],['Complete Training','complete-training'],['Notifications','notifications']],
- 'Section Supervisor':[['Section Dashboard','section-dashboard'],['Training Compliance','compliance-dashboard'],['Request Approvals','approver'],['Completion Reviews','approver'],['Notifications','notifications']],
- 'Division Supervisor':[['Division Dashboard','division-dashboard'],['Training Compliance','compliance-dashboard'],['Approval Overview','approver'],['Executive Reports','reports'],['Notifications','notifications']],
- Approver:[['Approval Queue','approver'],['My Requests','my-requests'],['Notifications','notifications']],
- Administrator:[['Admin Dashboard','admin'],['Employee Dashboard','dashboard'],['Training Compliance','compliance-dashboard'],['Approval Queue','approver'],['Executive Reports','reports'],['Notifications','notifications']],
- Executive:[['Executive Reports','reports'],['Training Compliance','compliance-dashboard'],['Division Dashboard','division-dashboard'],['Notifications','notifications']]
+ Employee:[['Dashboard','dashboard'],['Employee Chatbot','employee-chat'],['My Training Progress','compliance-dashboard'],['New Request','new-request'],['My Requests','my-requests'],['Complete Training','complete-training'],['System Workflow','system-workflow'],['Notifications','notifications']],
+ 'Section Supervisor':[['Section Dashboard','section-dashboard'],['Training Compliance','compliance-dashboard'],['Request Approvals','approver'],['Completion Reviews','approver'],['System Workflow','system-workflow'],['Notifications','notifications']],
+ 'Division Supervisor':[['Division Dashboard','division-dashboard'],['Training Compliance','compliance-dashboard'],['Approval Overview','approver'],['Executive Reports','reports'],['System Workflow','system-workflow'],['Notifications','notifications']],
+ Approver:[['Approval Queue','approver'],['My Requests','my-requests'],['System Workflow','system-workflow'],['Notifications','notifications']],
+ Administrator:[['Admin Dashboard','admin'],['Employee Dashboard','dashboard'],['Training Compliance','compliance-dashboard'],['Approval Queue','approver'],['Executive Reports','reports'],['System Workflow','system-workflow'],['Notifications','notifications']],
+ Executive:[['Executive Reports','reports'],['Training Compliance','compliance-dashboard'],['Division Dashboard','division-dashboard'],['System Workflow','system-workflow'],['Notifications','notifications']]
 };
 
 function $(id){return document.getElementById(id)}
 function clone(v){return JSON.parse(JSON.stringify(v))}
-function loadData(){try{const raw=localStorage.getItem(STORAGE_KEY);const d=raw?JSON.parse(raw):clone(seed);d.notifications=d.notifications||[];d.nextRequestNumber=d.nextRequestNumber||1000+(d.requests?.length||0)+1;d.requests?.forEach(r=>r.approvals=r.approvals||[]);return d}catch(e){return clone(seed)}}
-function saveData(){localStorage.setItem(STORAGE_KEY,JSON.stringify(db))}
+function normalizeData(d){d=d&&typeof d==='object'?d:clone(seed);d.schemaVersion='2.9-13-table';d.dataverseTables=[...DATAVERSE_TABLES];d.organizationUnits=d.organizationUnits||clone(seed.organizationUnits);d.referenceValues=d.referenceValues||clone(seed.referenceValues);d.employeeTargets=d.employeeTargets||clone(seed.employeeTargets);d.sessions=d.sessions||clone(seed.sessions);d.approvalRecords=d.approvalRecords||clone(seed.approvalRecords);d.notifications=d.notifications||clone(seed.notifications);d.completions=d.completions||clone(seed.completions);d.audit=d.audit||clone(seed.audit);d.nextRequestNumber=d.nextRequestNumber||1000+(d.requests?.length||0)+1;d.requests=(d.requests||[]).map(r=>({...r,approvals:r.approvals||[]}));return d}
+function loadData(){try{const raw=localStorage.getItem(STORAGE_KEY);return normalizeData(raw?JSON.parse(raw):clone(seed))}catch(e){return normalizeData(clone(seed))}}
+function saveData(){localStorage.setItem(STORAGE_KEY,JSON.stringify(db));if(dataMode==='shared'&&uatSession&&!suppressRemoteSave)queueRemoteSave()}
 function uid(prefix){return prefix+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function badge(v){return `<span class="status ${esc(v)}">${esc(v)}</span>`}
@@ -316,6 +461,57 @@ function auditDetail(value){if(!value)return '—';return `<details><summary>Vie
 function statusText(active){return active?'Active':'Inactive'}
 function actionButtons(entity,id,active){return `<div class="actions"><button class="btn light" data-action="edit" data-entity="${entity}" data-id="${id}">Edit</button><button class="btn ${active?'warning':'success'}" data-action="toggle" data-entity="${entity}" data-id="${id}">${active?'Deactivate':'Activate'}</button></div>`}
 
+function cleanProjectUrl(value){return String(value||'').trim().replace(/\/+$/,'')}
+function storedUatConfig(){try{return JSON.parse(localStorage.getItem(UAT_CONFIG_KEY)||'{}')}catch(e){return{}}}
+function currentUatConfig(){return{url:cleanProjectUrl($('uatProjectUrl')?.value||storedUatConfig().url),key:String($('uatPublishableKey')?.value||storedUatConfig().key||'').trim()}}
+function setConnectionStatus(label,state='',detail=''){
+ const pill=$('connectionStatus');if(!pill)return;pill.textContent=label;pill.className=`connection-pill ${state}`.trim();$('syncDetail').textContent=detail||label;
+}
+function updateDataModeUi(){
+ dataMode=$('dataMode').value;$('localLoginFields').classList.toggle('hidden',dataMode==='shared');$('sharedLoginFields').classList.toggle('hidden',dataMode!=='shared');$('refreshSharedBtn').classList.toggle('hidden',dataMode!=='shared');
+ const cfg=storedUatConfig();if(dataMode==='shared'){$('uatProjectUrl').value=$('uatProjectUrl').value||cfg.url||'';$('uatPublishableKey').value=$('uatPublishableKey').value||cfg.key||'';setConnectionStatus('UAT Sign-in Required','syncing','Shared UAT mode — sign in to synchronize fictional test data')}else{stopRemotePolling();setConnectionStatus('Local Demo','','Local browser data — not shared')}
+}
+function uatHeaders(extra={}){
+ const cfg=currentUatConfig();const headers={apikey:cfg.key,'Content-Type':'application/json',...extra};if(uatSession?.access_token)headers.Authorization=`Bearer ${uatSession.access_token}`;return headers;
+}
+async function uatRequest(path,{method='GET',body,headers={}}={}){
+ const cfg=currentUatConfig();if(!/^https:\/\/[a-z0-9.-]+\.supabase\.co$/i.test(cfg.url))throw new Error('Enter a valid Supabase Project URL ending in .supabase.co.');if(!cfg.key)throw new Error('Enter the Supabase publishable key.');
+ const response=await fetch(cfg.url+path,{method,headers:uatHeaders(headers),body:body===undefined?undefined:JSON.stringify(body)});const text=await response.text();let payload=null;try{payload=text?JSON.parse(text):null}catch(e){payload=text}
+ if(!response.ok){const message=payload?.msg||payload?.message||payload?.error_description||payload?.error||`Request failed (${response.status})`;throw new Error(message)}return payload;
+}
+async function authenticateSharedUat(email,password){
+ const cfg=currentUatConfig();if(!/^https:\/\/[a-z0-9.-]+\.supabase\.co$/i.test(cfg.url))throw new Error('Enter a valid Supabase Project URL ending in .supabase.co.');if(!cfg.key)throw new Error('Enter the Supabase publishable key.');localStorage.setItem(UAT_CONFIG_KEY,JSON.stringify(cfg));
+ const response=await fetch(cfg.url+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:cfg.key,'Content-Type':'application/json'},body:JSON.stringify({email,password})});const payload=await response.json().catch(()=>({}));if(!response.ok)throw new Error(payload.error_description||payload.msg||payload.message||'UAT sign-in failed.');
+ uatSession=payload;sessionStorage.setItem(UAT_SESSION_KEY,JSON.stringify(payload));return payload;
+}
+async function ensureRemoteState(){
+ const rows=await uatRequest(`/rest/v1/idp_uat_state?id=eq.${encodeURIComponent(UAT_STATE_ID)}&select=data,version,updated_at`);if(rows?.length)return rows[0];
+ const created=await uatRequest('/rest/v1/idp_uat_state',{method:'POST',headers:{Prefer:'return=representation'},body:{id:UAT_STATE_ID,data:clone(seed),version:1,updated_by:uatSession.user.id}});if(!created?.length)throw new Error('The shared UAT state could not be initialized. Run the supplied Supabase setup SQL first.');return created[0];
+}
+function acceptRemoteState(row){
+ suppressRemoteSave=true;db=normalizeData(clone(row.data));localStorage.setItem(STORAGE_KEY,JSON.stringify(db));suppressRemoteSave=false;remoteVersion=Number(row.version||0);remoteUpdatedAt=row.updated_at||new Date().toISOString();remoteDirty=false;populateLogin();
+ if($('login').classList.contains('hidden'))renderAll();setConnectionStatus('Shared UAT Online','online',`Shared version ${remoteVersion} · Updated ${formatDateTime(remoteUpdatedAt)}`);
+}
+async function pullRemoteState(force=false){
+ if(dataMode!=='shared'||!uatSession||remoteBusy||(!force&&remoteDirty))return;remoteBusy=true;setConnectionStatus('Refreshing…','syncing','Checking the shared UAT database');
+ try{const row=force&&remoteVersion===0?await ensureRemoteState():(await uatRequest(`/rest/v1/idp_uat_state?id=eq.${encodeURIComponent(UAT_STATE_ID)}&select=data,version,updated_at`))?.[0];if(!row)throw new Error('Shared UAT state was not found.');if(force||Number(row.version)>remoteVersion)acceptRemoteState(row);else setConnectionStatus('Shared UAT Online','online',`Shared version ${remoteVersion} · Updated ${formatDateTime(remoteUpdatedAt)}`)}catch(error){setConnectionStatus('Sync Error','error',error.message);if(force)throw error}finally{remoteBusy=false}
+}
+function queueRemoteSave(){
+ if(dataMode!=='shared'||!uatSession)return;remoteDirty=true;clearTimeout(remoteSaveTimer);remoteSaveTimer=setTimeout(pushRemoteState,350);
+}
+async function pushRemoteState(){
+ if(dataMode!=='shared'||!uatSession||!remoteDirty)return;if(remoteBusy){queueRemoteSave();return}remoteBusy=true;clearTimeout(remoteSaveTimer);setConnectionStatus('Saving…','syncing','Saving changes to the shared UAT database');
+ const expected=remoteVersion,snapshot=clone(db);
+ try{
+  const rows=await uatRequest(`/rest/v1/idp_uat_state?id=eq.${encodeURIComponent(UAT_STATE_ID)}&version=eq.${expected}`,{method:'PATCH',headers:{Prefer:'return=representation'},body:{data:snapshot,version:expected+1,updated_at:new Date().toISOString(),updated_by:uatSession.user.id}});
+  if(!rows?.length){remoteDirty=false;remoteBusy=false;await pullRemoteState(true);notify('adminNotice','Another user updated the shared data first. The newest version was loaded; repeat your last action.','err');return}
+  remoteVersion=Number(rows[0].version);remoteUpdatedAt=rows[0].updated_at;remoteDirty=false;setConnectionStatus('Shared UAT Online','online',`Shared version ${remoteVersion} · Updated ${formatDateTime(remoteUpdatedAt)}`);
+ }catch(error){remoteDirty=true;setConnectionStatus('Save Error','error',error.message)}finally{remoteBusy=false}
+}
+function startRemotePolling(){clearInterval(remotePollTimer);remotePollTimer=setInterval(()=>pullRemoteState(false),UAT_POLL_MS)}
+function stopRemotePolling(){clearInterval(remotePollTimer);clearTimeout(remoteSaveTimer);remotePollTimer=null;remoteSaveTimer=null;remoteBusy=false;remoteDirty=false;remoteVersion=0;remoteUpdatedAt=''}
+async function refreshSharedData(){if(dataMode!=='shared'||!uatSession){notify('loginNotice','Sign in to Shared UAT mode first.','err');return}try{if(remoteDirty)await pushRemoteState();if(!remoteDirty)await pullRemoteState(true)}catch(error){setConnectionStatus('Sync Error','error',error.message)}}
+
 function populateLogin(){
  $('loginAccount').innerHTML='<option value="">New employee — enter details below</option>'+db.employees.filter(x=>x.active).map(x=>`<option value="${x.id}">${esc(x.name)} — ${esc(x.supervisorLevel&&x.supervisorLevel!=='None'?x.supervisorLevel:x.role)}</option>`).join('');
  $('loginAccount').onchange=()=>{const emp=byId(db.employees,$('loginAccount').value);if(emp){$('loginName').value=emp.name;$('loginEmail').value=emp.email}};
@@ -331,13 +527,18 @@ function getCurrentEmployee(){
  const email=String(current.email||'').trim().toLowerCase();
  return db.employees.find(e=>String(e.email||'').trim().toLowerCase()===email)||null;
 }
-function signIn(){
+async function signIn(){
  if(!$('loginName').value.trim()||!$('loginEmail').checkValidity()){notify('loginNotice','Enter a valid name and work email.','err');return}
- const email=$('loginEmail').value.trim().toLowerCase();
+ dataMode=$('dataMode').value;let email=$('loginEmail').value.trim().toLowerCase();
+ if(dataMode==='shared'){
+  if(!$('uatProjectUrl').checkValidity()||!$('uatProjectUrl').value.trim()||!$('uatPublishableKey').value.trim()||!$('uatPassword').value){notify('loginNotice','Enter the Supabase URL, publishable key, email, and UAT password.','err');return}
+  $('loginBtn').disabled=true;setConnectionStatus('Connecting…','syncing','Authenticating and loading shared UAT data');
+  try{await authenticateSharedUat(email,$('uatPassword').value);email=String(uatSession.user?.email||email).toLowerCase();$('loginEmail').value=email;await pullRemoteState(true)}catch(error){notify('loginNotice',error.message,'err');setConnectionStatus('Connection Failed','error',error.message);$('loginBtn').disabled=false;return}
+ }
  let employee=db.employees.find(e=>String(e.email||'').trim().toLowerCase()===email);
- if(employee&&!employee.active){notify('loginNotice','This employee profile is inactive. Contact an administrator.','err');return}
+ if(employee&&!employee.active){$('loginBtn').disabled=false;notify('loginNotice','This employee profile is inactive. Contact an administrator.','err');return}
  if(!employee){
-  employee={id:uid('EMP'),name:$('loginName').value.trim(),number:'DEMO'+String(db.employees.length+1).padStart(3,'0'),email,divisionId:$('loginDivision').value,sectionId:$('loginSection').value,supervisorLevel:'None',role:'Employee',targetHours:0,active:true};
+  employee={id:uid('EMP'),name:$('loginName').value.trim(),number:'UAT'+String(db.employees.length+1).padStart(3,'0'),email,divisionId:$('loginDivision').value,sectionId:$('loginSection').value,supervisorLevel:'None',role:'Employee',targetHours:0,active:true};
   db.employees.push(employee);saveData();audit('Created via sign-in','Employee',employee.name,'Self-registered profile defaults to the Employee role.');
   notifySim(employee.id,'Welcome to the IDP Portal','Your profile was created with the Employee role. An Administrator can change your role and target hours.','');
  }
@@ -345,9 +546,9 @@ function signIn(){
  current={name:employee.name,email,role:effectiveRole,divisionId:employee.divisionId,sectionId:employee.sectionId};
  $('login').classList.add('hidden');$('sideName').textContent=current.name;$('sideRole').textContent=current.role;$('sideDivision').textContent='Division: '+nameOf(db.divisions,current.divisionId);$('sideSection').textContent='Section: '+(nameOf(db.sections,current.sectionId)||'All / Not Assigned');$('headerUser').textContent=current.name+' · '+current.role;
  $('requestEmployee').value=current.name;$('requestDivision').value=nameOf(db.divisions,current.divisionId);$('requestSection').value=nameOf(db.sections,current.sectionId);
- buildNav();renderAll();
+ $('loginBtn').disabled=false;if(dataMode==='shared'){startRemotePolling();setConnectionStatus('Shared UAT Online','online',`Shared version ${remoteVersion} · Updated ${formatDateTime(remoteUpdatedAt)}`)}else{stopRemotePolling();setConnectionStatus('Local Demo','','Local browser data — not shared')}buildNav();renderAll();
 }
-function logout(){$('login').classList.remove('hidden')}
+async function logout(){if(dataMode==='shared'&&remoteDirty){await pushRemoteState();if(remoteDirty){setConnectionStatus('Save Error','error','Changes are still unsynchronized. Resolve the connection before signing out.');return}}stopRemotePolling();uatSession=null;sessionStorage.removeItem(UAT_SESSION_KEY);$('uatPassword').value='';$('login').classList.remove('hidden');updateDataModeUi()}
 function buildNav(){
  const items=navMap[current.role]||navMap.Employee;$('nav').innerHTML='';
  items.forEach(([label,id],i)=>{const b=document.createElement('button');b.textContent=label;b.className=i?'':'active';b.addEventListener('click',()=>showPage(id,b));$('nav').appendChild(b)});
@@ -812,11 +1013,13 @@ function performReset(){db=clone(seed);saveData();audit('Reset prototype data','
 function init(){
  populateLogin();
  populateTimeOptions();
- $('loginBtn').addEventListener('click',signIn);$('logoutBtn').addEventListener('click',logout);$('requestForm').addEventListener('submit',submitRequest);$('completionForm').addEventListener('submit',submitCompletion);$('completionRequest').addEventListener('change',selectCompletionRequest);['completionDate','actualStartTime','actualEndTime','actualHours'].forEach(id=>$(id).addEventListener('input',renderCompletionComparison));$('chatForm').addEventListener('submit',submitChat);$('clearChatBtn').addEventListener('click',clearChat);document.querySelectorAll('[data-chat-question]').forEach(button=>button.addEventListener('click',()=>askChat(button.dataset.chatQuestion)));$('entityForm').addEventListener('submit',saveEntity);$('modalCloseBtn').addEventListener('click',closeModal);$('modalCancelBtn').addEventListener('click',closeModal);$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
- $('exportEmployeeBtn').addEventListener('click',exportEmployee);$('exportComplianceBtn').addEventListener('click',exportCompliance);$('exportRequestsBtn').addEventListener('click',exportRequests);$('exportRequestsAdminBtn').addEventListener('click',exportRequests);$('exportOrgBtn').addEventListener('click',exportOrganizations);$('exportApproversBtn').addEventListener('click',exportApprovers);$('exportEmployeesBtn').addEventListener('click',exportEmployees);$('backupBtn').addEventListener('click',backup);$('resetBtn').addEventListener('click',resetData);$('saveAllBtn').addEventListener('click',()=>{saveData();audit('Saved all changes','System','Local prototype storage');notify('adminNotice','All changes saved successfully.','ok')});
+ updateDataModeUi();
+ $('dataMode').addEventListener('change',updateDataModeUi);$('loginBtn').addEventListener('click',signIn);$('logoutBtn').addEventListener('click',logout);$('refreshSharedBtn').addEventListener('click',refreshSharedData);$('requestForm').addEventListener('submit',submitRequest);$('completionForm').addEventListener('submit',submitCompletion);$('completionRequest').addEventListener('change',selectCompletionRequest);['completionDate','actualStartTime','actualEndTime','actualHours'].forEach(id=>$(id).addEventListener('input',renderCompletionComparison));$('chatForm').addEventListener('submit',submitChat);$('clearChatBtn').addEventListener('click',clearChat);document.querySelectorAll('[data-chat-question]').forEach(button=>button.addEventListener('click',()=>askChat(button.dataset.chatQuestion)));$('entityForm').addEventListener('submit',saveEntity);$('modalCloseBtn').addEventListener('click',closeModal);$('modalCancelBtn').addEventListener('click',closeModal);$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
+ $('exportEmployeeBtn').addEventListener('click',exportEmployee);$('exportComplianceBtn').addEventListener('click',exportCompliance);$('exportRequestsBtn').addEventListener('click',exportRequests);$('exportRequestsAdminBtn').addEventListener('click',exportRequests);$('exportOrgBtn').addEventListener('click',exportOrganizations);$('exportApproversBtn').addEventListener('click',exportApprovers);$('exportEmployeesBtn').addEventListener('click',exportEmployees);$('backupBtn').addEventListener('click',backup);$('resetBtn').addEventListener('click',resetData);$('saveAllBtn').addEventListener('click',()=>{saveData();audit('Saved all changes','System',dataMode==='shared'?'Shared UAT database':'Local prototype storage');notify('adminNotice',dataMode==='shared'?'Changes queued for Shared UAT synchronization.':'All local changes saved successfully.','ok')});
  document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('tab-'+b.dataset.tab).classList.add('active')}));
  renderAll();
 }
+window.addEventListener('focus',()=>{if(dataMode==='shared'&&uatSession)pullRemoteState(false)});
 window.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
