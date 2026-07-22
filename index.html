@@ -3,7 +3,7 @@
   IDP Training App Demo
   Copyright © 2026 CP. All rights reserved.
   Designed and developed by CP for application design, demonstration, and project tracking.
-  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.8.
+  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.9.1.
 -->
 <html lang="en">
 <head>
@@ -12,7 +12,7 @@
 <meta name="author" content="CP">
 <meta name="copyright" content="Copyright 2026 CP. All rights reserved.">
 <meta name="application-name" content="IDP Training App Demo">
-<meta name="application-build" content="CP-IDP-2026-2.8">
+<meta name="application-build" content="CP-IDP-2026-2.9.1">
 <meta name="x-project-signature" content="CP26-IDP-7F3A">
 <title>IDP Training Management System</title>
 <style>
@@ -36,8 +36,9 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 .chat-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px}.chat-window{height:420px;overflow:auto;background:#f8fafc;border:1px solid var(--bd);border-radius:10px;padding:16px}.chat-message{display:flex;margin:9px 0}.chat-message.employee{justify-content:flex-end}.chat-bubble{max-width:82%;padding:10px 13px;border-radius:12px;line-height:1.45;white-space:pre-wrap}.chat-message.bot .chat-bubble{background:#eaf8fd;border:1px solid #bfe8f7;color:#173675}.chat-message.employee .chat-bubble{background:var(--p);color:#fff}.chat-form{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:12px}.quick-question{width:100%;margin:4px 0;text-align:left}
 .comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.comparison-panel{border:1px solid var(--bd);border-radius:10px;padding:14px;background:#f8fafc}.comparison-panel h4{margin:0 0 10px;color:var(--p)}.comparison-line{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--bd)}.comparison-line:last-child{border-bottom:0}.comparison-line span{color:var(--m)}.variance-summary{margin-top:12px;padding:11px 13px;border-radius:8px;font-weight:600}.variance-summary.match{background:#e8f7ec;color:#146a31}.variance-summary.changed{background:#fff2bd;color:#715600}.variance-list{margin:7px 0 0;padding-left:19px;font-weight:400}
 .workflow-route{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:700;color:var(--p)}.workflow-node{background:#fff;border:1px solid var(--charcoal);border-radius:7px;padding:8px 10px}.workflow-arrow{color:var(--charcoal);font-size:18px}.workflow-phase{display:inline-block;padding:4px 8px;border-radius:5px;background:var(--gray);color:var(--charcoal);font-size:12px;font-weight:700}.table-scroll{overflow-x:auto}
+.search-panel{display:grid;grid-template-columns:minmax(240px,1fr) auto;gap:10px;align-items:end;margin-top:16px;padding:14px 16px;background:#fff;border:1px solid var(--bd);border-radius:12px;box-shadow:var(--shadow)}.search-panel input[type="search"]{padding-left:38px;background:#fff no-repeat 12px center;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='%235f6b7a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E")}.search-summary{grid-column:1/-1;font-size:12px;color:var(--m);min-height:16px}.search-panel .btn{min-width:76px}
 .mode-panel{margin-top:14px;padding:13px;border:1px solid var(--bd);border-radius:10px;background:#f8fafc}.mode-panel .field{margin-top:9px}.uat-warning{margin-top:10px;padding:9px 11px;border-left:4px solid var(--gold);background:#fff8dc;color:#5f4b00;font-size:12px;line-height:1.45}.connection-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700;background:var(--gray);color:var(--charcoal)}.connection-pill::before{content:'';width:8px;height:8px;border-radius:50%;background:#8b8d90}.connection-pill.online{background:#e8f7ec;color:#146a31}.connection-pill.online::before{background:#20a653}.connection-pill.syncing{background:#fff2bd;color:#715600}.connection-pill.syncing::before{background:#d39d00}.connection-pill.error{background:#fde8e8;color:#9b1c1c}.connection-pill.error::before{background:#d84c4c}.sync-detail{font-size:11px;color:var(--m)}
-@media(max-width:980px){.app{grid-template-columns:1fr}aside{position:relative;height:auto}.metrics,.two,.three,.form-grid{grid-template-columns:1fr 1fr}.chat-layout{grid-template-columns:1fr}}@media(max-width:680px){.login-card,.metrics,.two,.three,.form-grid,.comparison-grid{grid-template-columns:1fr}.page{padding:17px}.chat-form{grid-template-columns:1fr}}
+@media(max-width:980px){.app{grid-template-columns:1fr}aside{position:relative;height:auto}.metrics,.two,.three,.form-grid{grid-template-columns:1fr 1fr}.chat-layout{grid-template-columns:1fr}}@media(max-width:680px){.login-card,.metrics,.two,.three,.form-grid,.comparison-grid,.search-panel{grid-template-columns:1fr}.page{padding:17px}.chat-form{grid-template-columns:1fr}.search-panel .btn{width:100%}}
 </style>
 </head>
 <body>
@@ -71,7 +72,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
       <div class="small" style="margin-top:10px">Unknown emails create a new profile with the Employee role. Only an Administrator can change roles.</div>
       <div id="loginNotice" class="notice" style="margin-top:10px;margin-bottom:0"></div>
       <button class="btn primary" style="width:100%;margin-top:18px" id="loginBtn">Continue to App</button>
-      <div class="small" style="text-align:center;margin-top:14px">App version 2.9<br>Last updated July 22, 2026</div>
+      <div class="small" style="text-align:center;margin-top:14px">App version 2.9.1<br>Last updated July 22, 2026</div>
       <div class="small" style="text-align:center;margin-top:10px">© 2026 IDP Training App Demo</div>
     </div>
   </div>
@@ -84,7 +85,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <nav id="nav"></nav>
   <div class="org"><b>Organization</b><small id="sideDivision"></small><small id="sideSection"></small></div>
   <div class="year"><b>Active Program Year</b><small>Jul 1, 2026 – Jun 30, 2027</small><small>Target: 80 Hours</small></div>
-  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.9</div>
+  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.9.1</div>
 </aside>
 <main>
 <header><div><strong>IDP Training Management System</strong><div class="sync-detail" id="syncDetail">Local browser data</div></div><div class="actions"><span class="connection-pill" id="connectionStatus">Local Demo</span><span id="headerUser"></span><button class="btn light" id="refreshSharedBtn" type="button" title="Refresh shared UAT data">Refresh</button><button class="btn light" id="logoutBtn">Sign Out</button></div></header>
@@ -118,6 +119,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 
 <section class="page" id="my-requests">
   <div class="row"><div><h2>My Requests</h2><div class="subtitle">Track request and completion status.</div></div><button class="btn light" id="exportRequestsBtn">Export</button></div>
+  <div class="search-panel"><div class="field"><label for="requestSearch">Search My Requests</label><input id="requestSearch" type="search" autocomplete="off" placeholder="Request ID, training, status, platform, category, Division or Section"></div><button class="btn light" type="button" data-clear-search="requestSearch">Clear</button><div class="search-summary" id="requestSearchCount" aria-live="polite"></div></div>
   <div class="card" style="margin-top:16px"><table><thead><tr><th>ID</th><th>Training</th><th>Division</th><th>Section</th><th>Training Date</th><th>Start Time</th><th>End Time</th><th>Hours</th><th>Status</th><th>Reason / Note</th><th>Action</th></tr></thead><tbody id="requestRows"></tbody></table></div>
 </section>
 
@@ -158,6 +160,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 
 <section class="page" id="notifications">
   <div class="row"><div><h2>Notifications</h2><div class="subtitle">Simulated email notifications. In production these are sent by Power Automate (email / Teams).</div></div></div>
+  <div class="search-panel"><div class="field"><label for="notificationSearch">Search Notifications</label><input id="notificationSearch" type="search" autocomplete="off" placeholder="Subject, message, request ID or date"></div><button class="btn light" type="button" data-clear-search="notificationSearch">Clear</button><div class="search-summary" id="notificationSearchCount" aria-live="polite"></div></div>
   <div class="card" style="margin-top:16px"><table><thead><tr><th>Date / Time</th><th>Subject</th><th>Message</th><th>Regarding</th></tr></thead><tbody id="notificationRows"></tbody></table></div>
 </section>
 
@@ -175,6 +178,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 
 <section class="page" id="approver">
   <h2>Approval Queue</h2><div class="subtitle">Approval rights are enforced by approval-group membership, method (Any One / All / Sequential), and priority. Administrator actions are an audited override.</div>
+  <div class="search-panel"><div class="field"><label for="approvalSearch">Search Approval and Completion Queues</label><input id="approvalSearch" type="search" autocomplete="off" placeholder="Request ID, training, employee, status, Division or Section"></div><button class="btn light" type="button" data-clear-search="approvalSearch">Clear</button><div class="search-summary" id="approvalSearchCount" aria-live="polite"></div></div>
   <div class="grid two" style="margin-top:16px"><div class="card"><h3>Request Approvals</h3><div id="approvalQueue"></div></div><div class="card"><h3>Completion Reviews</h3><div id="completionQueue"></div></div></div>
 </section>
 
@@ -186,6 +190,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
     <div class="card metric"><span>In Progress</span><strong id="complianceInProgress">0</strong><small>Some approved hours</small></div>
     <div class="card metric"><span>Overall Compliance</span><strong id="complianceRate">0%</strong><small>Employees at target</small></div>
   </div>
+  <div class="search-panel"><div class="field"><label for="complianceSearch">Search Employee Completion Report</label><input id="complianceSearch" type="search" autocomplete="off" placeholder="Employee, Division, Section, compliance status or training date"></div><button class="btn light" type="button" data-clear-search="complianceSearch">Clear</button><div class="search-summary" id="complianceSearchCount" aria-live="polite"></div></div>
   <div class="card" style="margin-top:16px"><h3>Employee Completion Report</h3><table><thead><tr><th>Employee</th><th>Division</th><th>Section</th><th>Latest Training Date</th><th>Target</th><th>Completed</th><th>Remaining</th><th>Progress</th><th>Compliance</th></tr></thead><tbody id="complianceRows"></tbody></table></div>
 </section>
 
@@ -256,6 +261,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 <section class="page" id="admin">
   <div class="row"><div><h2>Administrator Dashboard</h2><div class="subtitle">Full create, edit, activate/deactivate, validation, audit, and export functions.</div></div><button class="btn primary" id="saveAllBtn">Save All Changes</button></div>
   <div id="adminNotice" class="notice"></div>
+  <div class="search-panel"><div class="field"><label for="adminSearch">Search Administrator Records</label><input id="adminSearch" type="search" autocomplete="off" placeholder="Name, ID, email, code, role, status, request, reason or audit action"></div><button class="btn light" type="button" data-clear-search="adminSearch">Clear</button><div class="search-summary" id="adminSearchCount" aria-live="polite">Search applies to every Administrator tab.</div></div>
   <div class="tabs">
     <button class="active" data-tab="divisions">Divisions</button><button data-tab="sections">Sections</button><button data-tab="employees">Employees</button><button data-tab="groups">Approval Groups</button><button data-tab="members">Group Members</button><button data-tab="years">Program Years</button><button data-tab="references">Reference Data</button><button data-tab="corrections">Request Corrections</button><button data-tab="audit">Audit Log</button><button data-tab="export">Export Center</button>
   </div>
@@ -280,7 +286,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 'use strict';
 
 // Internal provenance marker for future source verification; intentionally not rendered in the UI.
-const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.9'});
+const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.9.1'});
 
 // Canonical Dataverse for Teams deployment model. The HTML prototype keeps its
 // compact client-side collections as compatibility views for the same 13 tables.
@@ -414,6 +420,9 @@ function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 function badge(v){return `<span class="status ${esc(v)}">${esc(v)}</span>`}
 function byId(list,id){return list.find(x=>x.id===id)}
 function nameOf(list,id){return byId(list,id)?.name||''}
+function searchValue(id){const el=$(id);return el?el.value.trim().toLowerCase():''}
+function matchesSearch(query,...values){if(!query)return true;return values.flat().filter(value=>value!==null&&value!==undefined).map(value=>String(value).toLowerCase()).join(' ').includes(query)}
+function setSearchSummary(id,shown,total,label){const el=$(id);if(!el)return;const displayLabel=total===1||label.endsWith('s')?label:`${label}s`;el.textContent=`${shown} of ${total} ${displayLabel} shown`}
 function formatDate(value){if(!value)return 'Not recorded';const [y,m,d]=String(value).slice(0,10).split('-').map(Number);if(!y||!m||!d)return esc(value);return new Date(y,m-1,d).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}
 function formatTime(value){if(!value)return 'Not recorded';const [h,m]=String(value).split(':').map(Number);if(!Number.isInteger(h)||!Number.isInteger(m)||h<0||h>23||m<0||m>59)return esc(value);return `${h%12||12}:${String(m).padStart(2,'0')} ${h<12?'AM':'PM'}`}
 function formatTimeRange(request){return `${formatTime(request.startTime)} – ${formatTime(request.endTime)}`}
@@ -631,12 +640,15 @@ function renderRequests(){
   $('dashboardRows').innerHTML='<tr><td colspan="4">No employee profile found for this email.</td></tr>';
   $('requestRows').innerHTML='<tr><td colspan="11">No employee profile found.</td></tr>';
   $('completionRequest').innerHTML='<option value="">No employee profile found</option>';
-  $('requiredHours').textContent='80';$('completedHours').textContent='0';$('remainingHours').textContent='80';$('progressPct').textContent='0%';return;
+  $('requiredHours').textContent='80';$('completedHours').textContent='0';$('remainingHours').textContent='80';$('progressPct').textContent='0%';setSearchSummary('requestSearchCount',0,0,'request');return;
  }
  const mine=db.requests.filter(r=>r.employeeId===employee.id);
+ const requestQuery=searchValue('requestSearch');
+ const filteredMine=mine.filter(r=>matchesSearch(requestQuery,r.id,r.title,r.status,r.platform,r.classType,r.category,r.trainingDate,formatTime(r.startTime),formatTime(r.endTime),r.hours,r.cost,r.decisionNote,r.cancelReason,nameOf(db.divisions,r.divisionId),nameOf(db.sections,r.sectionId)));
  const recent=[...mine].reverse().slice(0,3);
  $('dashboardRows').innerHTML=recent.map(r=>`<tr><td>${esc(r.title)}</td><td>${formatDate(trainingDateFor(r))}<div class="small">${formatTimeRange(r)}</div></td><td>${badge(r.status)}</td><td>${r.hours}</td></tr>`).join('')||'<tr><td colspan="4">No requests.</td></tr>';
- $('requestRows').innerHTML=mine.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(r.title)}</td><td>${esc(nameOf(db.divisions,r.divisionId))}</td><td>${esc(nameOf(db.sections,r.sectionId))}</td><td>${formatDate(trainingDateFor(r))}</td><td>${formatTime(r.startTime)}</td><td>${formatTime(r.endTime)}</td><td>${r.hours}</td><td>${badge(r.status)}${stageApprovals(r).length?`<div class="small">${stageApprovals(r).length} of ${activeMembers(stageGroupId(r)).length||'?'} approvals</div>`:''}</td><td>${esc(r.decisionNote||r.cancelReason||'—')}</td><td><div class="actions">${requestActionButtons(r)}</div></td></tr>`).join('')||'<tr><td colspan="11">No requests.</td></tr>';
+ $('requestRows').innerHTML=filteredMine.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(r.title)}</td><td>${esc(nameOf(db.divisions,r.divisionId))}</td><td>${esc(nameOf(db.sections,r.sectionId))}</td><td>${formatDate(trainingDateFor(r))}</td><td>${formatTime(r.startTime)}</td><td>${formatTime(r.endTime)}</td><td>${r.hours}</td><td>${badge(r.status)}${stageApprovals(r).length?`<div class="small">${stageApprovals(r).length} of ${activeMembers(stageGroupId(r)).length||'?'} approvals</div>`:''}</td><td>${esc(r.decisionNote||r.cancelReason||'—')}</td><td><div class="actions">${requestActionButtons(r)}</div></td></tr>`).join('')||`<tr><td colspan="11">${requestQuery?'No requests match your search.':'No requests.'}</td></tr>`;
+ setSearchSummary('requestSearchCount',filteredMine.length,mine.length,'request');
  const selectedCompletionRequest=$('completionRequest').value;
  $('completionRequest').innerHTML='<option value="">Select approved request</option>'+mine.filter(r=>r.status==='Approved').map(r=>`<option value="${r.id}">${esc(r.id+' - '+r.title+' - '+(trainingDateFor(r)||'Date not recorded')+' - '+formatTimeRange(r))}</option>`).join('');
  if([...$('completionRequest').options].some(option=>option.value===selectedCompletionRequest))$('completionRequest').value=selectedCompletionRequest;
@@ -698,10 +710,13 @@ function visibleComplianceEmployees(){
 }
 function renderCompliance(){
  const employees=visibleComplianceEmployees();
- const rows=employees.map(employee=>({employee,...employeeProgress(employee)}));
- const completed=rows.filter(x=>x.complete).length,inProgress=rows.filter(x=>!x.complete&&x.completed>0).length,rate=rows.length?Math.round(completed/rows.length*100):0;
- $('complianceEmployees').textContent=rows.length;$('complianceCompleted').textContent=completed;$('complianceInProgress').textContent=inProgress;$('complianceRate').textContent=rate+'%';
- $('complianceRows').innerHTML=rows.map(x=>`<tr><td>${esc(x.employee.name)}</td><td>${esc(nameOf(db.divisions,x.employee.divisionId))}</td><td>${esc(nameOf(db.sections,x.employee.sectionId)||'Not assigned')}</td><td>${formatDate(latestEmployeeTrainingDate(x.employee.id))}</td><td>${x.target}</td><td>${x.completed}</td><td>${x.remaining}</td><td><div>${x.percent}%</div><div class="progress-track"><div class="progress-fill ${x.complete?'done':''}" style="width:${x.percent}%"></div></div></td><td>${badge(x.complete?'Completed':x.completed>0?'In Progress':'Not Started')}</td></tr>`).join('')||'<tr><td colspan="9">No active employees.</td></tr>';
+ const allRows=employees.map(employee=>({employee,...employeeProgress(employee)}));
+ const complianceQuery=searchValue('complianceSearch');
+ const rows=allRows.filter(x=>{const status=x.complete?'Completed':x.completed>0?'In Progress':'Not Started';return matchesSearch(complianceQuery,x.employee.id,x.employee.name,x.employee.email,x.employee.role,nameOf(db.divisions,x.employee.divisionId),nameOf(db.sections,x.employee.sectionId),latestEmployeeTrainingDate(x.employee.id),x.target,x.completed,x.remaining,x.percent,status)});
+ const completed=allRows.filter(x=>x.complete).length,inProgress=allRows.filter(x=>!x.complete&&x.completed>0).length,rate=allRows.length?Math.round(completed/allRows.length*100):0;
+ $('complianceEmployees').textContent=allRows.length;$('complianceCompleted').textContent=completed;$('complianceInProgress').textContent=inProgress;$('complianceRate').textContent=rate+'%';
+ $('complianceRows').innerHTML=rows.map(x=>`<tr><td>${esc(x.employee.name)}</td><td>${esc(nameOf(db.divisions,x.employee.divisionId))}</td><td>${esc(nameOf(db.sections,x.employee.sectionId)||'Not assigned')}</td><td>${formatDate(latestEmployeeTrainingDate(x.employee.id))}</td><td>${x.target}</td><td>${x.completed}</td><td>${x.remaining}</td><td><div>${x.percent}%</div><div class="progress-track"><div class="progress-fill ${x.complete?'done':''}" style="width:${x.percent}%"></div></div></td><td>${badge(x.complete?'Completed':x.completed>0?'In Progress':'Not Started')}</td></tr>`).join('')||`<tr><td colspan="9">${complianceQuery?'No employees match your search.':'No active employees.'}</td></tr>`;
+ setSearchSummary('complianceSearchCount',rows.length,allRows.length,'employee');
  const sectionEmployees=db.employees.filter(e=>e.active&&e.sectionId===current.sectionId),sectionDone=sectionEmployees.filter(e=>employeeProgress(e).complete).length;
  const divisionEmployees=db.employees.filter(e=>e.active&&e.divisionId===current.divisionId),divisionDone=divisionEmployees.filter(e=>employeeProgress(e).complete).length;
  const allEmployees=db.employees.filter(e=>e.active),allDone=allEmployees.filter(e=>employeeProgress(e).complete).length;
@@ -743,11 +758,16 @@ function approvalProgressInfo(r){
  return ' · Any One Approver';
 }
 function renderApprovals(){
- const pending=db.requests.filter(r=>canApproveRequest(r));
- $('approvalQueue').innerHTML=pending.map(r=>`<div class="card" style="box-shadow:none;margin-bottom:10px"><b>${esc(r.title)}</b><p><b>Stage:</b> ${r.status==='Pending Division Approval'?'Division Escalation':'Section Approval'} — ${esc(nameOf(db.groups,stageGroupId(r))||'No group configured')}${approvalProgressInfo(r)}</p><p><b>Employee:</b> ${esc(nameOf(db.employees,r.employeeId))}<br><b>Training Date:</b> ${formatDate(trainingDateFor(r))}<br><b>Time:</b> ${formatTimeRange(r)}<br>${esc(nameOf(db.sections,r.sectionId))} · ${r.hours} hours · $${Number(r.cost||0)}${r.escalation?' · Division escalation required':''}</p><div class="actions"><button class="btn success" data-decision="Approved" data-id="${r.id}">Approve</button><button class="btn warning" data-decision="Returned" data-id="${r.id}">Return</button><button class="btn danger" data-decision="Rejected" data-id="${r.id}">Reject</button></div></div>`).join('')||'<p>No pending requests require your approval.</p>';
+ const approvalQuery=searchValue('approvalSearch');
+ const pendingAll=db.requests.filter(r=>canApproveRequest(r));
+ const pending=pendingAll.filter(r=>matchesSearch(approvalQuery,r.id,r.title,r.status,r.platform,r.classType,r.category,r.trainingDate,r.hours,r.cost,nameOf(db.employees,r.employeeId),nameOf(db.divisions,r.divisionId),nameOf(db.sections,r.sectionId),nameOf(db.groups,stageGroupId(r))));
+ $('approvalQueue').innerHTML=pending.map(r=>`<div class="card" style="box-shadow:none;margin-bottom:10px"><b>${esc(r.title)}</b><p><b>Stage:</b> ${r.status==='Pending Division Approval'?'Division Escalation':'Section Approval'} — ${esc(nameOf(db.groups,stageGroupId(r))||'No group configured')}${approvalProgressInfo(r)}</p><p><b>Employee:</b> ${esc(nameOf(db.employees,r.employeeId))}<br><b>Training Date:</b> ${formatDate(trainingDateFor(r))}<br><b>Time:</b> ${formatTimeRange(r)}<br>${esc(nameOf(db.sections,r.sectionId))} · ${r.hours} hours · $${Number(r.cost||0)}${r.escalation?' · Division escalation required':''}</p><div class="actions"><button class="btn success" data-decision="Approved" data-id="${r.id}">Approve</button><button class="btn warning" data-decision="Returned" data-id="${r.id}">Return</button><button class="btn danger" data-decision="Rejected" data-id="${r.id}">Reject</button></div></div>`).join('')||`<p>${approvalQuery?'No request approvals match your search.':'No pending requests require your approval.'}</p>`;
  document.querySelectorAll('[data-decision]').forEach(b=>b.addEventListener('click',()=>decideRequest(b.dataset.id,b.dataset.decision)));
- const completions=db.completions.filter(c=>c.status==='Submitted'&&canReviewCompletionRecord(c));
- $('completionQueue').innerHTML=completions.map(c=>{const r=byId(db.requests,c.requestId)||{};const actualStart=c.actualStartTime||r.startTime||'',actualEnd=c.actualEndTime||r.endTime||'';const differences=completionVariance(r,{date:c.completionDate,startTime:actualStart,endTime:actualEnd,hours:Number(c.actualHours)});return `<div class="card" style="box-shadow:none;margin-bottom:10px"><b>${esc(c.requestId)}</b> · ${esc(nameOf(db.employees,c.employeeId))}<div class="comparison-grid" style="margin-top:12px"><div class="comparison-panel"><h4>Approved Request</h4>${comparisonLines({'Date':formatDate(r.trainingDate),'Time':formatTimeRange(r),'Hours':`${r.hours||0} hours`})}</div><div class="comparison-panel"><h4>Actual Completion</h4>${comparisonLines({'Date':formatDate(c.completionDate),'Time':`${formatTime(actualStart)} – ${formatTime(actualEnd)}`,'Hours':`${c.actualHours} hours`})}</div></div><div class="variance-summary ${differences.length?'changed':'match'}">${differences.length?`Variance found:<ul class="variance-list">${differences.map(item=>`<li>${esc(item)}</li>`).join('')}</ul>`:'Match confirmed — actual details match the approved request.'}</div>${c.certificateFileName||c.certificateNumber?`<p><b>Certificate:</b> ${esc(c.certificateFileName||'—')}${c.certificateNumber?` · #${esc(c.certificateNumber)}`:''}</p>`:''}${c.notes?`<p><b>Employee note:</b> ${esc(c.notes)}</p>`:''}<div class="actions"><button class="btn success" data-cdecision="Approved" data-cid="${c.id}">Approve</button><button class="btn warning" data-cdecision="Returned" data-cid="${c.id}">Return</button><button class="btn danger" data-cdecision="Rejected" data-cid="${c.id}">Reject</button></div></div>`}).join('')||'<p>No pending completion reviews for you.</p>';
+ const completionsAll=db.completions.filter(c=>c.status==='Submitted'&&canReviewCompletionRecord(c));
+ const completions=completionsAll.filter(c=>{const r=byId(db.requests,c.requestId)||{};return matchesSearch(approvalQuery,c.id,c.requestId,c.status,c.completionDate,c.actualHours,c.certificateNumber,c.certificateFileName,c.notes,r.title,r.status,r.platform,r.category,nameOf(db.employees,c.employeeId),nameOf(db.divisions,c.divisionId),nameOf(db.sections,c.sectionId))});
+ $('completionQueue').innerHTML=completions.map(c=>{const r=byId(db.requests,c.requestId)||{};const actualStart=c.actualStartTime||r.startTime||'',actualEnd=c.actualEndTime||r.endTime||'';const differences=completionVariance(r,{date:c.completionDate,startTime:actualStart,endTime:actualEnd,hours:Number(c.actualHours)});return `<div class="card" style="box-shadow:none;margin-bottom:10px"><b>${esc(c.requestId)}</b> · ${esc(nameOf(db.employees,c.employeeId))}<div class="comparison-grid" style="margin-top:12px"><div class="comparison-panel"><h4>Approved Request</h4>${comparisonLines({'Date':formatDate(r.trainingDate),'Time':formatTimeRange(r),'Hours':`${r.hours||0} hours`})}</div><div class="comparison-panel"><h4>Actual Completion</h4>${comparisonLines({'Date':formatDate(c.completionDate),'Time':`${formatTime(actualStart)} – ${formatTime(actualEnd)}`,'Hours':`${c.actualHours} hours`})}</div></div><div class="variance-summary ${differences.length?'changed':'match'}">${differences.length?`Variance found:<ul class="variance-list">${differences.map(item=>`<li>${esc(item)}</li>`).join('')}</ul>`:'Match confirmed — actual details match the approved request.'}</div>${c.certificateFileName||c.certificateNumber?`<p><b>Certificate:</b> ${esc(c.certificateFileName||'—')}${c.certificateNumber?` · #${esc(c.certificateNumber)}`:''}</p>`:''}${c.notes?`<p><b>Employee note:</b> ${esc(c.notes)}</p>`:''}<div class="actions"><button class="btn success" data-cdecision="Approved" data-cid="${c.id}">Approve</button><button class="btn warning" data-cdecision="Returned" data-cid="${c.id}">Return</button><button class="btn danger" data-cdecision="Rejected" data-cid="${c.id}">Reject</button></div></div>`}).join('')||`<p>${approvalQuery?'No completion reviews match your search.':'No pending completion reviews for you.'}</p>`;
+ const totalApprovalItems=pendingAll.length+completionsAll.length,shownApprovalItems=pending.length+completions.length;
+ setSearchSummary('approvalSearchCount',shownApprovalItems,totalApprovalItems,'queue item');
  document.querySelectorAll('[data-cdecision]').forEach(b=>b.addEventListener('click',()=>decideCompletion(b.dataset.cid,b.dataset.cdecision)));
 }
 function decideRequest(id,status){
@@ -804,18 +824,30 @@ function applyCompletionDecision(id,status,note){
 }
 
 function renderAdmin(){
- $('divisionRows').innerHTML=db.divisions.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.code)}</td><td>${esc(nameOf(db.employees,x.supervisorId)||'Not assigned')}</td><td>${esc(nameOf(db.groups,x.defaultGroupId)||'Not assigned')}</td><td>${badge(statusText(x.active))}</td><td>${actionButtons('division',x.id,x.active)}</td></tr>`).join('');
- $('sectionRows').innerHTML=db.sections.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.code)}</td><td>${esc(nameOf(db.divisions,x.divisionId))}</td><td>${esc(nameOf(db.employees,x.supervisorId)||'Not assigned')}</td><td>${esc(nameOf(db.groups,x.defaultGroupId)||'Not assigned')}</td><td>${badge(statusText(x.active))}</td><td>${actionButtons('section',x.id,x.active)}</td></tr>`).join('');
- $('employeeRows').innerHTML=db.employees.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.email)}</td><td>${esc(nameOf(db.divisions,x.divisionId))}</td><td>${esc(nameOf(db.sections,x.sectionId)||'All / Not assigned')}</td><td>${esc(x.supervisorLevel)}</td><td>${esc(x.role)}</td><td>${badge(statusText(x.active))}</td><td>${actionButtons('employee',x.id,x.active)}</td></tr>`).join('');
- $('groupRows').innerHTML=db.groups.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.scope)}</td><td>${esc(nameOf(db.divisions,x.divisionId))}</td><td>${esc(nameOf(db.sections,x.sectionId)||'All Sections')}</td><td>${esc(x.method)}</td><td>${badge(statusText(x.active))}</td><td>${actionButtons('group',x.id,x.active)}</td></tr>`).join('');
- $('memberRows').innerHTML=db.members.map(x=>`<tr><td>${esc(nameOf(db.groups,x.groupId))}</td><td>${esc(nameOf(db.employees,x.employeeId))}</td><td>${esc(x.role)}</td><td>${x.priority}</td><td>${x.canReviewCompletion?'Yes':'No'}</td><td>${badge(statusText(x.active))}</td><td>${actionButtons('member',x.id,x.active)}</td></tr>`).join('');
- $('yearRows').innerHTML=db.years.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.start)}</td><td>${esc(x.end)}</td><td>${x.targetHours}</td><td>${x.current?'Yes':'No'}</td><td>${badge(statusText(x.active))}</td><td>${actionButtons('year',x.id,x.active)}</td></tr>`).join('');
- renderRefList('platformRows','platform',db.platforms);renderRefList('classTypeRows','classType',db.classTypes);renderRefList('categoryRows','category',db.categories);
- $('correctionRows').innerHTML=db.requests.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(nameOf(db.employees,r.employeeId))}</td><td>${esc(r.title)}</td><td>${formatDate(r.trainingDate)}<div class="small">${formatTimeRange(r)}</div></td><td>${badge(r.status)}</td><td>${r.lastModifiedDate?`${formatDateTime(r.lastModifiedDate)}<div class="small">${esc(r.lastModifiedBy||'')}</div>`:'—'}</td><td><button class="btn warning" data-admin-correct="${r.id}">Correct Record</button></td></tr>`).join('')||'<tr><td colspan="7">No requests.</td></tr>';
- $('auditRows').innerHTML=db.audit.map(a=>`<tr><td>${formatDateTime(a.date)}</td><td>${esc(a.action)}</td><td>${esc(a.entity)}</td><td>${esc(a.record)}</td><td>${esc(a.by)}</td><td>${esc(a.note||'—')}</td><td>${auditDetail(a.previousValues)}</td><td>${auditDetail(a.newValues)}</td></tr>`).join('')||'<tr><td colspan="8">No audit records.</td></tr>';
+ const q=searchValue('adminSearch');
+ const divisions=db.divisions.filter(x=>matchesSearch(q,x.id,x.name,x.code,nameOf(db.employees,x.supervisorId),nameOf(db.groups,x.defaultGroupId),statusText(x.active)));
+ const sections=db.sections.filter(x=>matchesSearch(q,x.id,x.name,x.code,nameOf(db.divisions,x.divisionId),nameOf(db.employees,x.supervisorId),nameOf(db.groups,x.defaultGroupId),statusText(x.active)));
+ const employees=db.employees.filter(x=>matchesSearch(q,x.id,x.name,x.number,x.email,x.role,x.supervisorLevel,nameOf(db.divisions,x.divisionId),nameOf(db.sections,x.sectionId),x.targetHours,statusText(x.active)));
+ const groups=db.groups.filter(x=>matchesSearch(q,x.id,x.name,x.scope,x.method,nameOf(db.divisions,x.divisionId),nameOf(db.sections,x.sectionId),statusText(x.active)));
+ const members=db.members.filter(x=>matchesSearch(q,x.id,nameOf(db.groups,x.groupId),nameOf(db.employees,x.employeeId),x.role,x.priority,x.canReviewCompletion?'Can review completion':'',statusText(x.active)));
+ const years=db.years.filter(x=>matchesSearch(q,x.id,x.name,x.start,x.end,x.targetHours,x.current?'Current':'',statusText(x.active)));
+ const corrections=db.requests.filter(r=>matchesSearch(q,r.id,r.title,r.status,r.trainingDate,r.lastModifiedDate,r.lastModifiedBy,r.lastModificationReason,r.decisionNote,r.cancelReason,nameOf(db.employees,r.employeeId),nameOf(db.divisions,r.divisionId),nameOf(db.sections,r.sectionId)));
+ const audits=db.audit.filter(a=>matchesSearch(q,a.date,a.action,a.entity,a.record,a.by,a.note,a.previousValues,a.newValues));
+ $('divisionRows').innerHTML=divisions.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.code)}</td><td>${esc(nameOf(db.employees,x.supervisorId)||'Not assigned')}</td><td>${esc(nameOf(db.groups,x.defaultGroupId)||'Not assigned')}</td><td>${badge(statusText(x.active))}</td><td>${actionButtons('division',x.id,x.active)}</td></tr>`).join('')||'<tr><td colspan="6">No matching Divisions.</td></tr>';
+ $('sectionRows').innerHTML=sections.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.code)}</td><td>${esc(nameOf(db.divisions,x.divisionId))}</td><td>${esc(nameOf(db.employees,x.supervisorId)||'Not assigned')}</td><td>${esc(nameOf(db.groups,x.defaultGroupId)||'Not assigned')}</td><td>${badge(statusText(x.active))}</td><td>${actionButtons('section',x.id,x.active)}</td></tr>`).join('')||'<tr><td colspan="7">No matching Sections.</td></tr>';
+ $('employeeRows').innerHTML=employees.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.email)}</td><td>${esc(nameOf(db.divisions,x.divisionId))}</td><td>${esc(nameOf(db.sections,x.sectionId)||'All / Not assigned')}</td><td>${esc(x.supervisorLevel)}</td><td>${esc(x.role)}</td><td>${badge(statusText(x.active))}</td><td>${actionButtons('employee',x.id,x.active)}</td></tr>`).join('')||'<tr><td colspan="8">No matching Employees.</td></tr>';
+ $('groupRows').innerHTML=groups.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.scope)}</td><td>${esc(nameOf(db.divisions,x.divisionId))}</td><td>${esc(nameOf(db.sections,x.sectionId)||'All Sections')}</td><td>${esc(x.method)}</td><td>${badge(statusText(x.active))}</td><td>${actionButtons('group',x.id,x.active)}</td></tr>`).join('')||'<tr><td colspan="7">No matching Approval Groups.</td></tr>';
+ $('memberRows').innerHTML=members.map(x=>`<tr><td>${esc(nameOf(db.groups,x.groupId))}</td><td>${esc(nameOf(db.employees,x.employeeId))}</td><td>${esc(x.role)}</td><td>${x.priority}</td><td>${x.canReviewCompletion?'Yes':'No'}</td><td>${badge(statusText(x.active))}</td><td>${actionButtons('member',x.id,x.active)}</td></tr>`).join('')||'<tr><td colspan="7">No matching Group Members.</td></tr>';
+ $('yearRows').innerHTML=years.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.start)}</td><td>${esc(x.end)}</td><td>${x.targetHours}</td><td>${x.current?'Yes':'No'}</td><td>${badge(statusText(x.active))}</td><td>${actionButtons('year',x.id,x.active)}</td></tr>`).join('')||'<tr><td colspan="7">No matching Program Years.</td></tr>';
+ const refShown=renderRefList('platformRows','platform',db.platforms,q)+renderRefList('classTypeRows','classType',db.classTypes,q)+renderRefList('categoryRows','category',db.categories,q);
+ $('correctionRows').innerHTML=corrections.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(nameOf(db.employees,r.employeeId))}</td><td>${esc(r.title)}</td><td>${formatDate(r.trainingDate)}<div class="small">${formatTimeRange(r)}</div></td><td>${badge(r.status)}</td><td>${r.lastModifiedDate?`${formatDateTime(r.lastModifiedDate)}<div class="small">${esc(r.lastModifiedBy||'')}</div>`:'—'}</td><td><button class="btn warning" data-admin-correct="${r.id}">Correct Record</button></td></tr>`).join('')||'<tr><td colspan="7">No matching requests.</td></tr>';
+ $('auditRows').innerHTML=audits.map(a=>`<tr><td>${formatDateTime(a.date)}</td><td>${esc(a.action)}</td><td>${esc(a.entity)}</td><td>${esc(a.record)}</td><td>${esc(a.by)}</td><td>${esc(a.note||'—')}</td><td>${auditDetail(a.previousValues)}</td><td>${auditDetail(a.newValues)}</td></tr>`).join('')||'<tr><td colspan="8">No matching audit records.</td></tr>';
+ const shown=divisions.length+sections.length+employees.length+groups.length+members.length+years.length+refShown+corrections.length+audits.length;
+ const total=db.divisions.length+db.sections.length+db.employees.length+db.groups.length+db.members.length+db.years.length+db.platforms.length+db.classTypes.length+db.categories.length+db.requests.length+db.audit.length;
+ setSearchSummary('adminSearchCount',shown,total,'record across Admin tabs');
  bindAdminActions();
 }
-function renderRefList(container,entity,list){$(container).innerHTML=list.map(x=>`<div class="row" style="padding:9px 0;border-bottom:1px solid var(--bd)"><div>${esc(x.name)}<div class="small">${statusText(x.active)}</div></div>${actionButtons(entity,x.id,x.active)}</div>`).join('')}
+function renderRefList(container,entity,list,query=''){const filtered=list.filter(x=>matchesSearch(query,x.id,x.name,statusText(x.active)));$(container).innerHTML=filtered.map(x=>`<div class="row" style="padding:9px 0;border-bottom:1px solid var(--bd)"><div>${esc(x.name)}<div class="small">${statusText(x.active)}</div></div>${actionButtons(entity,x.id,x.active)}</div>`).join('')||'<div class="small">No matching records.</div>';return filtered.length}
 function bindAdminActions(){
  document.querySelectorAll('[data-action][data-entity]').forEach(b=>b.onclick=()=>{const {action,entity,id}=b.dataset;if(action==='add'||action==='edit')openModal(entity,id||'');else if(action==='toggle')toggleEntity(entity,id)});
  document.querySelectorAll('[data-admin-correct]').forEach(b=>b.onclick=()=>openRequestCorrection(b.dataset.adminCorrect,'admin'));
@@ -964,7 +996,10 @@ function renderReferenceSelects(){
 function renderNotifications(){
  const employee=getCurrentEmployee();
  const mine=employee?db.notifications.filter(n=>n.toEmployeeId===employee.id):[];
- $('notificationRows').innerHTML=mine.map(n=>`<tr><td>${formatDateTime(n.date)}</td><td>${esc(n.subject)}</td><td>${esc(n.body)}</td><td>${esc(n.regarding||'—')}</td></tr>`).join('')||'<tr><td colspan="4">No notifications yet.</td></tr>';
+ const notificationQuery=searchValue('notificationSearch');
+ const filtered=mine.filter(n=>matchesSearch(notificationQuery,n.id,n.date,formatDateTime(n.date),n.subject,n.body,n.regarding,n.channel,n.status));
+ $('notificationRows').innerHTML=filtered.map(n=>`<tr><td>${formatDateTime(n.date)}</td><td>${esc(n.subject)}</td><td>${esc(n.body)}</td><td>${esc(n.regarding||'—')}</td></tr>`).join('')||`<tr><td colspan="4">${notificationQuery?'No notifications match your search.':'No notifications yet.'}</td></tr>`;
+ setSearchSummary('notificationSearchCount',filtered.length,mine.length,'notification');
 }
 function submitRequest(e){
  e.preventDefault();const form=$('requestForm');if(!form.checkValidity()){form.reportValidity();notify('requestNotice','Complete all required fields using valid values.','err');return}
@@ -1016,6 +1051,9 @@ function init(){
  updateDataModeUi();
  $('dataMode').addEventListener('change',updateDataModeUi);$('loginBtn').addEventListener('click',signIn);$('logoutBtn').addEventListener('click',logout);$('refreshSharedBtn').addEventListener('click',refreshSharedData);$('requestForm').addEventListener('submit',submitRequest);$('completionForm').addEventListener('submit',submitCompletion);$('completionRequest').addEventListener('change',selectCompletionRequest);['completionDate','actualStartTime','actualEndTime','actualHours'].forEach(id=>$(id).addEventListener('input',renderCompletionComparison));$('chatForm').addEventListener('submit',submitChat);$('clearChatBtn').addEventListener('click',clearChat);document.querySelectorAll('[data-chat-question]').forEach(button=>button.addEventListener('click',()=>askChat(button.dataset.chatQuestion)));$('entityForm').addEventListener('submit',saveEntity);$('modalCloseBtn').addEventListener('click',closeModal);$('modalCancelBtn').addEventListener('click',closeModal);$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
  $('exportEmployeeBtn').addEventListener('click',exportEmployee);$('exportComplianceBtn').addEventListener('click',exportCompliance);$('exportRequestsBtn').addEventListener('click',exportRequests);$('exportRequestsAdminBtn').addEventListener('click',exportRequests);$('exportOrgBtn').addEventListener('click',exportOrganizations);$('exportApproversBtn').addEventListener('click',exportApprovers);$('exportEmployeesBtn').addEventListener('click',exportEmployees);$('backupBtn').addEventListener('click',backup);$('resetBtn').addEventListener('click',resetData);$('saveAllBtn').addEventListener('click',()=>{saveData();audit('Saved all changes','System',dataMode==='shared'?'Shared UAT database':'Local prototype storage');notify('adminNotice',dataMode==='shared'?'Changes queued for Shared UAT synchronization.':'All local changes saved successfully.','ok')});
+ const searchRenderers={requestSearch:renderRequests,approvalSearch:renderApprovals,complianceSearch:renderCompliance,adminSearch:renderAdmin,notificationSearch:renderNotifications};
+ Object.entries(searchRenderers).forEach(([id,renderer])=>{$(id).addEventListener('input',renderer);$(id).addEventListener('keydown',event=>{if(event.key==='Escape'&&$(id).value){$(id).value='';renderer()}})});
+ document.querySelectorAll('[data-clear-search]').forEach(button=>button.addEventListener('click',()=>{const input=$(button.dataset.clearSearch);if(!input)return;input.value='';searchRenderers[input.id]?.();input.focus()}));
  document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('tab-'+b.dataset.tab).classList.add('active')}));
  renderAll();
 }
