@@ -3,7 +3,7 @@
   IDP Training App Demo
   Copyright © 2026 CP. All rights reserved.
   Designed and developed by CP for application design, demonstration, and project tracking.
-  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.9.1.
+  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.9.3.
 -->
 <html lang="en">
 <head>
@@ -12,7 +12,7 @@
 <meta name="author" content="CP">
 <meta name="copyright" content="Copyright 2026 CP. All rights reserved.">
 <meta name="application-name" content="IDP Training App Demo">
-<meta name="application-build" content="CP-IDP-2026-2.9.1">
+<meta name="application-build" content="CP-IDP-2026-2.9.3">
 <meta name="x-project-signature" content="CP26-IDP-7F3A">
 <title>IDP Training Management System</title>
 <style>
@@ -72,7 +72,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
       <div class="small" style="margin-top:10px">Unknown emails create a new profile with the Employee role. Only an Administrator can change roles.</div>
       <div id="loginNotice" class="notice" style="margin-top:10px;margin-bottom:0"></div>
       <button class="btn primary" style="width:100%;margin-top:18px" id="loginBtn">Continue to App</button>
-      <div class="small" style="text-align:center;margin-top:14px">App version 2.9.1<br>Last updated July 22, 2026</div>
+      <div class="small" style="text-align:center;margin-top:14px">App version 2.9.3<br>Last updated July 22, 2026</div>
       <div class="small" style="text-align:center;margin-top:10px">© 2026 IDP Training App Demo</div>
     </div>
   </div>
@@ -85,7 +85,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <nav id="nav"></nav>
   <div class="org"><b>Organization</b><small id="sideDivision"></small><small id="sideSection"></small></div>
   <div class="year"><b>Active Program Year</b><small>Jul 1, 2026 – Jun 30, 2027</small><small>Target: 80 Hours</small></div>
-  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.9.1</div>
+  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.9.3</div>
 </aside>
 <main>
 <header><div><strong>IDP Training Management System</strong><div class="sync-detail" id="syncDetail">Local browser data</div></div><div class="actions"><span class="connection-pill" id="connectionStatus">Local Demo</span><span id="headerUser"></span><button class="btn light" id="refreshSharedBtn" type="button" title="Refresh shared UAT data">Refresh</button><button class="btn light" id="logoutBtn">Sign Out</button></div></header>
@@ -286,7 +286,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 'use strict';
 
 // Internal provenance marker for future source verification; intentionally not rendered in the UI.
-const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.9.1'});
+const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.9.3'});
 
 // Canonical Dataverse for Teams deployment model. The HTML prototype keeps its
 // compact client-side collections as compatibility views for the same 13 tables.
@@ -390,7 +390,7 @@ const seed={
 };
 
 let db=loadData();
-let current={name:'Alex Morgan',email:'alex.morgan@example.com',role:'Employee',divisionId:'DIV1',sectionId:'SEC1'};
+let current={employeeId:'EMP1',name:'Alex Morgan',email:'alex.morgan@example.com',role:'Employee',divisionId:'DIV1',sectionId:'SEC1'};
 let dataMode='local';
 let uatSession=null;
 let remoteVersion=0;
@@ -499,7 +499,7 @@ async function ensureRemoteState(){
 }
 function acceptRemoteState(row){
  suppressRemoteSave=true;db=normalizeData(clone(row.data));localStorage.setItem(STORAGE_KEY,JSON.stringify(db));suppressRemoteSave=false;remoteVersion=Number(row.version||0);remoteUpdatedAt=row.updated_at||new Date().toISOString();remoteDirty=false;populateLogin();
- if($('login').classList.contains('hidden'))renderAll();setConnectionStatus('Shared UAT Online','online',`Shared version ${remoteVersion} · Updated ${formatDateTime(remoteUpdatedAt)}`);
+ if($('login').classList.contains('hidden')){const employee=getCurrentEmployee();if(employee)applyEmployeeContext(employee);else hydrateRequestIdentity(null);renderAll()}setConnectionStatus('Shared UAT Online','online',`Shared version ${remoteVersion} · Updated ${formatDateTime(remoteUpdatedAt)}`);
 }
 async function pullRemoteState(force=false){
  if(dataMode!=='shared'||!uatSession||remoteBusy||(!force&&remoteDirty))return;remoteBusy=true;setConnectionStatus('Refreshing…','syncing','Checking the shared UAT database');
@@ -532,9 +532,29 @@ function updateLoginSections(){
  const divId=$('loginDivision').value;
  $('loginSection').innerHTML='<option value="">All / Not Assigned</option>'+db.sections.filter(x=>x.active&&x.divisionId===divId).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');
 }
+function normalizedIdentityName(value){return String(value||'').trim().replace(/\s+/g,' ').toLowerCase()}
 function getCurrentEmployee(){
  const email=String(current.email||'').trim().toLowerCase();
- return db.employees.find(e=>String(e.email||'').trim().toLowerCase()===email)||null;
+ const byStableId=current.employeeId?byId(db.employees,current.employeeId):null;
+ if(byStableId)return byStableId;
+ const byEmail=db.employees.find(e=>String(e.email||'').trim().toLowerCase()===email);
+ if(byEmail)return byEmail;
+ const name=normalizedIdentityName(current.name),nameMatches=db.employees.filter(e=>normalizedIdentityName(e.name)===name);
+ return nameMatches.length===1?nameMatches[0]:null;
+}
+function hydrateRequestIdentity(employee=getCurrentEmployee()){
+ const divisionId=employee?.divisionId||current.divisionId||'',sectionId=employee?.sectionId||current.sectionId||'';
+ $('requestEmployee').value=employee?.name||current.name||'';
+ $('requestDivision').value=nameOf(db.divisions,divisionId)||'Not assigned';
+ $('requestSection').value=nameOf(db.sections,sectionId)||'Not assigned';
+}
+function applyEmployeeContext(employee){
+ if(!employee)return false;
+ const effectiveRole=employee.supervisorLevel&&employee.supervisorLevel!=='None'?employee.supervisorLevel:employee.role;
+ current={employeeId:employee.id,name:employee.name,email:String(employee.email||'').trim().toLowerCase(),role:effectiveRole,divisionId:employee.divisionId||'',sectionId:employee.sectionId||''};
+ $('sideName').textContent=current.name;$('sideRole').textContent=current.role;$('sideDivision').textContent='Division: '+(nameOf(db.divisions,current.divisionId)||'Not assigned');$('sideSection').textContent='Section: '+(nameOf(db.sections,current.sectionId)||'Not assigned');$('headerUser').textContent=current.name+' · '+current.role;
+ hydrateRequestIdentity(employee);
+ return true;
 }
 async function signIn(){
  if(!$('loginName').value.trim()||!$('loginEmail').checkValidity()){notify('loginNotice','Enter a valid name and work email.','err');return}
@@ -551,10 +571,8 @@ async function signIn(){
   db.employees.push(employee);saveData();audit('Created via sign-in','Employee',employee.name,'Self-registered profile defaults to the Employee role.');
   notifySim(employee.id,'Welcome to the IDP Portal','Your profile was created with the Employee role. An Administrator can change your role and target hours.','');
  }
- const effectiveRole=employee.supervisorLevel&&employee.supervisorLevel!=='None'?employee.supervisorLevel:employee.role;
- current={name:employee.name,email,role:effectiveRole,divisionId:employee.divisionId,sectionId:employee.sectionId};
- $('login').classList.add('hidden');$('sideName').textContent=current.name;$('sideRole').textContent=current.role;$('sideDivision').textContent='Division: '+nameOf(db.divisions,current.divisionId);$('sideSection').textContent='Section: '+(nameOf(db.sections,current.sectionId)||'All / Not Assigned');$('headerUser').textContent=current.name+' · '+current.role;
- $('requestEmployee').value=current.name;$('requestDivision').value=nameOf(db.divisions,current.divisionId);$('requestSection').value=nameOf(db.sections,current.sectionId);
+ applyEmployeeContext(employee);
+ $('login').classList.add('hidden');
  $('loginBtn').disabled=false;if(dataMode==='shared'){startRemotePolling();setConnectionStatus('Shared UAT Online','online',`Shared version ${remoteVersion} · Updated ${formatDateTime(remoteUpdatedAt)}`)}else{stopRemotePolling();setConnectionStatus('Local Demo','','Local browser data — not shared')}buildNav();renderAll();
 }
 async function logout(){if(dataMode==='shared'&&remoteDirty){await pushRemoteState();if(remoteDirty){setConnectionStatus('Save Error','error','Changes are still unsynchronized. Resolve the connection before signing out.');return}}stopRemotePolling();uatSession=null;sessionStorage.removeItem(UAT_SESSION_KEY);$('uatPassword').value='';$('login').classList.remove('hidden');updateDataModeUi()}
@@ -566,10 +584,12 @@ function buildNav(){
 function showPage(id,button){
  if(id==='employee-chat'&&current.role!=='Employee'){alert('The Employee Chatbot is available only to the Employee role.');return}
  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));if(button)button.classList.add('active');
+ if(id==='new-request')hydrateRequestIdentity();
  if(id==='dashboard')renderRequests();
 }
 
 function renderAll(){
+ hydrateRequestIdentity();
  const division=nameOf(db.divisions,current.divisionId),section=nameOf(db.sections,current.sectionId);
  const activeYear=db.years.find(y=>y.current&&y.active);if(activeYear){$('trainingDate').min=activeYear.start;$('trainingDate').max=activeYear.end;$('completionDate').min=activeYear.start;$('completionDate').max=activeYear.end}
  document.querySelectorAll('[data-division]').forEach(x=>x.textContent=division);document.querySelectorAll('[data-section]').forEach(x=>x.textContent=section||'All');
@@ -1012,7 +1032,7 @@ function submitRequest(e){
  const id='REQ-'+db.nextRequestNumber++;
  const request={id,employeeId:employee.id,title:$('trainingTitle').value.trim(),platform:$('platform').value,classType:$('classType').value,category:$('category').value,justification:$('justification').value.trim(),divisionId:employee.divisionId||current.divisionId,sectionId:employee.sectionId||current.sectionId,trainingDate:$('trainingDate').value,startTime,endTime,hours,cost,status:'Pending',escalation:cost>=1000,approvals:[]};db.requests.push(request);
  notifyGroup(section.defaultGroupId,'New training request pending approval',`${employee.name} submitted ${id} (${request.title}) for Section approval.`,id);
- saveData();audit('Submitted','Training Request',id,'Initial employee submission',{newValues:JSON.stringify(requestSnapshot(request))});notify('requestNotice',cost>=1000?'Request submitted. It requires Section approval and then Division escalation approval (cost ≥ $1,000).':'Request submitted to the Section Approval Group.','ok');form.reset();renderAll();
+ saveData();audit('Submitted','Training Request',id,'Initial employee submission',{newValues:JSON.stringify(requestSnapshot(request))});notify('requestNotice',cost>=1000?'Request submitted. It requires Section approval and then Division escalation approval (cost ≥ $1,000).':'Request submitted to the Section Approval Group.','ok');form.reset();hydrateRequestIdentity(employee);renderAll();
 }
 function submitCompletion(e){
  e.preventDefault();const form=$('completionForm');if(!form.checkValidity()){form.reportValidity();notify('completionNotice','Complete all required completion fields.','err');return}
