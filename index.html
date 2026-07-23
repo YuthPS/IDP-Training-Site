@@ -3,7 +3,7 @@
   IDP Training App Demo
   Copyright © 2026 CP. All rights reserved.
   Designed and developed by CP for application design, demonstration, and project tracking.
-  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.9.3.
+  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.9.4.
 -->
 <html lang="en">
 <head>
@@ -12,7 +12,7 @@
 <meta name="author" content="CP">
 <meta name="copyright" content="Copyright 2026 CP. All rights reserved.">
 <meta name="application-name" content="IDP Training App Demo">
-<meta name="application-build" content="CP-IDP-2026-2.9.3">
+<meta name="application-build" content="CP-IDP-2026-2.9.4">
 <meta name="x-project-signature" content="CP26-IDP-7F3A">
 <title>IDP Training Management System</title>
 <style>
@@ -72,7 +72,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
       <div class="small" style="margin-top:10px">Unknown emails create a new profile with the Employee role. Only an Administrator can change roles.</div>
       <div id="loginNotice" class="notice" style="margin-top:10px;margin-bottom:0"></div>
       <button class="btn primary" style="width:100%;margin-top:18px" id="loginBtn">Continue to App</button>
-      <div class="small" style="text-align:center;margin-top:14px">App version 2.9.3<br>Last updated July 22, 2026</div>
+      <div class="small" style="text-align:center;margin-top:14px">App version 2.9.4<br>Last updated July 22, 2026</div>
       <div class="small" style="text-align:center;margin-top:10px">© 2026 IDP Training App Demo</div>
     </div>
   </div>
@@ -85,7 +85,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <nav id="nav"></nav>
   <div class="org"><b>Organization</b><small id="sideDivision"></small><small id="sideSection"></small></div>
   <div class="year"><b>Active Program Year</b><small>Jul 1, 2026 – Jun 30, 2027</small><small>Target: 80 Hours</small></div>
-  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.9.3</div>
+  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.9.4</div>
 </aside>
 <main>
 <header><div><strong>IDP Training Management System</strong><div class="sync-detail" id="syncDetail">Local browser data</div></div><div class="actions"><span class="connection-pill" id="connectionStatus">Local Demo</span><span id="headerUser"></span><button class="btn light" id="refreshSharedBtn" type="button" title="Refresh shared UAT data">Refresh</button><button class="btn light" id="logoutBtn">Sign Out</button></div></header>
@@ -286,7 +286,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 'use strict';
 
 // Internal provenance marker for future source verification; intentionally not rendered in the UI.
-const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.9.3'});
+const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.9.4'});
 
 // Canonical Dataverse for Teams deployment model. The HTML prototype keeps its
 // compact client-side collections as compatibility views for the same 13 tables.
@@ -295,6 +295,49 @@ const DATAVERSE_TABLES=Object.freeze([
  'IDP Reference Value','IDP Approval Group','IDP Approval Group Member',
  'IDP Training Session','IDP Training Request','IDP Approval',
  'IDP Training Completion','IDP Notification','IDP Audit Log'
+]);
+
+const MASTER_PLATFORM_VALUES=Object.freeze([
+ ['Microsoft Learn','MSLEARN'],['LinkedIn Learning','LINKEDIN'],['Coursera','COURSERA'],
+ ['Udemy Business','UDEMY'],['Pluralsight','PLURALSIGHT'],['Skillsoft Percipio','PERCIPIO'],
+ ['O’Reilly Learning','OREILLY'],['edX','EDX'],['Harvard Business Publishing','HBP'],
+ ['Info-Tech Academy','INFOTECH'],['SANS Institute','SANS'],['CompTIA Training','COMPTIA'],
+ ['ISACA Training','ISACA'],['PMI Training','PMI'],['AWS Skill Builder','AWS'],
+ ['Google Cloud Skills Boost','GCP'],['Cisco Networking Academy','CISCO'],
+ ['Salesforce Trailhead','SALESFORCE'],['Oracle University','ORACLE'],['SAP Learning Hub','SAP'],
+ ['Internal Training','INTERNAL'],['Other','OTHER']
+]);
+const MASTER_CLASS_TYPE_VALUES=Object.freeze([
+ ['In-Person Instructor-Led','INPERSON'],['Virtual Instructor-Led','VILT'],
+ ['Self-Paced Online','SELFONLINE'],['Live Webinar','LIVEWEB'],['Recorded Webinar','RECWEB'],
+ ['Workshop','WORKSHOP'],['Seminar','SEMINAR'],['Conference','CONFERENCE'],
+ ['Certification Preparation','CERTPREP'],['Hands-On Lab','LAB'],['Boot Camp','BOOTCAMP'],
+ ['On-the-Job Training','OJT'],['Coaching','COACHING'],['Mentoring','MENTORING'],
+ ['Job Shadowing','SHADOW'],['Simulation or Exercise','SIMULATION'],
+ ['Lunch and Learn','LUNCHLEARN'],['Academic Course','ACADEMIC'],
+ ['Train-the-Trainer','TRAINER'],['Internal Training Session','INTERNALSESSION']
+]);
+const MASTER_CATEGORY_VALUES=Object.freeze([
+ ['Leadership and Management','LEADERSHIP'],['Project Management','PROJECT'],
+ ['Data Analytics and Business Intelligence','DATA'],['Application Development','APPDEV'],
+ ['Cybersecurity','CYBER'],['Information Technology','IT'],['Cloud Computing','CLOUD'],
+ ['Artificial Intelligence and Automation','AI'],['Microsoft 365 and Productivity','M365'],
+ ['Database and Data Management','DATABASE'],['Business Analysis','BUSINESS'],
+ ['Communication and Presentation','COMMUNICATION'],['Customer Service','CUSTOMER'],
+ ['Compliance and Ethics','COMPLIANCE'],['Safety and Emergency Preparedness','SAFETY'],
+ ['Human Resources and Workplace Development','HR'],['Diversity, Equity, and Inclusion','DEI'],
+ ['Process Improvement and Quality Assurance','QUALITY'],
+ ['Election Operations and Administration','ELECTION'],
+ ['Professional and Career Development','CAREER'],['Other','OTHER']
+]);
+function masterRecords(values,prefix){return values.map(([name,code],index)=>({id:`${prefix}${index+1}`,name,code,active:true}))}
+const MASTER_PLATFORMS=Object.freeze(masterRecords(MASTER_PLATFORM_VALUES,'P'));
+const MASTER_CLASS_TYPES=Object.freeze(masterRecords(MASTER_CLASS_TYPE_VALUES,'C'));
+const MASTER_CATEGORIES=Object.freeze(masterRecords(MASTER_CATEGORY_VALUES,'CAT'));
+const MASTER_REFERENCE_VALUES=Object.freeze([
+ ...MASTER_PLATFORM_VALUES.map(([name,code],index)=>({id:`REF-P${index+1}`,name,referenceType:'Platform',code,active:true})),
+ ...MASTER_CLASS_TYPE_VALUES.map(([name,code],index)=>({id:`REF-C${index+1}`,name,referenceType:'Class Type',code,active:true})),
+ ...MASTER_CATEGORY_VALUES.map(([name,code],index)=>({id:`REF-CAT${index+1}`,name,referenceType:'Category',code,active:true}))
 ]);
 
 const STORAGE_KEY='idpDivisionSectionPublicDemoV4';
@@ -347,19 +390,10 @@ const seed={
   {id:'TGT5',employeeId:'EMP5',programYearId:'YR1',targetHours:80,active:true},
   {id:'TGT6',employeeId:'EMP6',programYearId:'YR1',targetHours:0,active:true}
  ],
- platforms:[{id:'P1',name:'Microsoft Learn',active:true},{id:'P2',name:'LinkedIn Learning',active:true},{id:'P3',name:'Info-Tech',active:true}],
- classTypes:[{id:'C1',name:'Online',active:true},{id:'C2',name:'Instructor-Led',active:true}],
- categories:[{id:'CAT1',name:'Data Analytics',active:true},{id:'CAT2',name:'Application Development',active:true},{id:'CAT3',name:'Cybersecurity',active:true}],
- referenceValues:[
-  {id:'REF-P1',name:'Microsoft Learn',referenceType:'Platform',code:'MSLEARN',active:true},
-  {id:'REF-P2',name:'LinkedIn Learning',referenceType:'Platform',code:'LINKEDIN',active:true},
-  {id:'REF-P3',name:'Info-Tech',referenceType:'Platform',code:'INFOTECH',active:true},
-  {id:'REF-C1',name:'Online',referenceType:'Class Type',code:'ONLINE',active:true},
-  {id:'REF-C2',name:'Instructor-Led',referenceType:'Class Type',code:'ILT',active:true},
-  {id:'REF-CAT1',name:'Data Analytics',referenceType:'Category',code:'DATA',active:true},
-  {id:'REF-CAT2',name:'Application Development',referenceType:'Category',code:'APPDEV',active:true},
-  {id:'REF-CAT3',name:'Cybersecurity',referenceType:'Category',code:'CYBER',active:true}
- ],
+ platforms:clone(MASTER_PLATFORMS),
+ classTypes:clone(MASTER_CLASS_TYPES),
+ categories:clone(MASTER_CATEGORIES),
+ referenceValues:clone(MASTER_REFERENCE_VALUES),
  requests:[
   {id:'REQ-1001',employeeId:'EMP1',title:'Power BI Data Modeling',platform:'Microsoft Learn',classType:'Instructor-Led',category:'Data Analytics',justification:'Develop advanced reporting and data modeling skills.',divisionId:'DIV1',sectionId:'SEC1',trainingDate:'2026-07-08',startTime:'09:00',endTime:'17:00',hours:8,cost:0,status:'Completed',escalation:false,approvals:[{name:'Jordan Lee',stage:'Section',decision:'Approved',date:'2026-07-02T16:00:00Z'},{name:'Jordan Lee',stage:'Completion',decision:'Approved',date:'2026-07-09T16:00:00Z'}]},
   {id:'REQ-1002',employeeId:'EMP1',title:'Project Management Essentials',platform:'LinkedIn Learning',classType:'Online',category:'Application Development',justification:'Improve project planning and delivery skills.',divisionId:'DIV1',sectionId:'SEC1',trainingDate:'2026-08-12',startTime:'08:30',endTime:'16:30',hours:8,cost:0,status:'Approved',escalation:false,approvals:[{name:'Casey Rivera',stage:'Section',decision:'Approved',date:'2026-07-11T16:00:00Z'}]},
@@ -412,7 +446,27 @@ const navMap={
 
 function $(id){return document.getElementById(id)}
 function clone(v){return JSON.parse(JSON.stringify(v))}
-function normalizeData(d){d=d&&typeof d==='object'?d:clone(seed);d.schemaVersion='2.9-13-table';d.dataverseTables=[...DATAVERSE_TABLES];d.organizationUnits=d.organizationUnits||clone(seed.organizationUnits);d.referenceValues=d.referenceValues||clone(seed.referenceValues);d.employeeTargets=d.employeeTargets||clone(seed.employeeTargets);d.sessions=d.sessions||clone(seed.sessions);d.approvalRecords=d.approvalRecords||clone(seed.approvalRecords);d.notifications=d.notifications||clone(seed.notifications);d.completions=d.completions||clone(seed.completions);d.audit=d.audit||clone(seed.audit);d.nextRequestNumber=d.nextRequestNumber||1000+(d.requests?.length||0)+1;d.requests=(d.requests||[]).map(r=>({...r,approvals:r.approvals||[]}));return d}
+function masterKey(value){return String(value||'').trim().replace(/[’']/g,"'").replace(/\s+/g,' ').toLowerCase()}
+function mergeMasterValues(existing,master,aliases={}){
+ const masterKeys=new Set(master.map(item=>masterKey(item.name))),result=clone(master),seen=new Set(masterKeys);
+ (existing||[]).forEach(item=>{const originalKey=masterKey(item.name),canonicalKey=masterKey(aliases[originalKey]||item.name);if(masterKeys.has(canonicalKey)||seen.has(canonicalKey))return;result.push({...item,name:String(item.name||'').trim()});seen.add(canonicalKey)});
+ return result;
+}
+function mergeReferenceValues(existing){
+ const aliases={'platform|info-tech':'platform|info-tech academy','class type|online':'class type|self-paced online','class type|instructor-led':'class type|in-person instructor-led','category|data analytics':'category|data analytics and business intelligence'};
+ const masterKeys=new Set(MASTER_REFERENCE_VALUES.map(item=>`${masterKey(item.referenceType)}|${masterKey(item.name)}`)),result=clone(MASTER_REFERENCE_VALUES),seen=new Set(masterKeys);
+ (existing||[]).forEach(item=>{const original=`${masterKey(item.referenceType)}|${masterKey(item.name)}`,canonical=aliases[original]||original;if(masterKeys.has(canonical)||seen.has(canonical))return;result.push({...item,name:String(item.name||'').trim()});seen.add(canonical)});
+ return result;
+}
+function normalizeData(d){
+ d=d&&typeof d==='object'?d:clone(seed);d.schemaVersion='2.9-13-table';d.dataverseTables=[...DATAVERSE_TABLES];
+ d.organizationUnits=d.organizationUnits||clone(seed.organizationUnits);
+ d.platforms=mergeMasterValues(d.platforms,MASTER_PLATFORMS,{'info-tech':'Info-Tech Academy'});
+ d.classTypes=mergeMasterValues(d.classTypes,MASTER_CLASS_TYPES,{'online':'Self-Paced Online','instructor-led':'In-Person Instructor-Led'});
+ d.categories=mergeMasterValues(d.categories,MASTER_CATEGORIES,{'data analytics':'Data Analytics and Business Intelligence'});
+ d.referenceValues=mergeReferenceValues(d.referenceValues);
+ d.employeeTargets=d.employeeTargets||clone(seed.employeeTargets);d.sessions=d.sessions||clone(seed.sessions);d.approvalRecords=d.approvalRecords||clone(seed.approvalRecords);d.notifications=d.notifications||clone(seed.notifications);d.completions=d.completions||clone(seed.completions);d.audit=d.audit||clone(seed.audit);d.nextRequestNumber=d.nextRequestNumber||1000+(d.requests?.length||0)+1;d.requests=(d.requests||[]).map(r=>({...r,approvals:r.approvals||[]}));return d
+}
 function loadData(){try{const raw=localStorage.getItem(STORAGE_KEY);return normalizeData(raw?JSON.parse(raw):clone(seed))}catch(e){return normalizeData(clone(seed))}}
 function saveData(){localStorage.setItem(STORAGE_KEY,JSON.stringify(db));if(dataMode==='shared'&&uatSession&&!suppressRemoteSave)queueRemoteSave()}
 function uid(prefix){return prefix+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
