@@ -3,7 +3,7 @@
   IDP Training App Demo
   Copyright © 2026 CP. All rights reserved.
   Designed and developed by CP for application design, demonstration, and project tracking.
-  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.9.4.
+  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.9.5.
 -->
 <html lang="en">
 <head>
@@ -12,7 +12,7 @@
 <meta name="author" content="CP">
 <meta name="copyright" content="Copyright 2026 CP. All rights reserved.">
 <meta name="application-name" content="IDP Training App Demo">
-<meta name="application-build" content="CP-IDP-2026-2.9.4">
+<meta name="application-build" content="CP-IDP-2026-2.9.5">
 <meta name="x-project-signature" content="CP26-IDP-7F3A">
 <title>IDP Training Management System</title>
 <style>
@@ -72,7 +72,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
       <div class="small" style="margin-top:10px">Unknown emails create a new profile with the Employee role. Only an Administrator can change roles.</div>
       <div id="loginNotice" class="notice" style="margin-top:10px;margin-bottom:0"></div>
       <button class="btn primary" style="width:100%;margin-top:18px" id="loginBtn">Continue to App</button>
-      <div class="small" style="text-align:center;margin-top:14px">App version 2.9.4<br>Last updated July 22, 2026</div>
+      <div class="small" style="text-align:center;margin-top:14px">App version 2.9.5<br>Last updated July 24, 2026</div>
       <div class="small" style="text-align:center;margin-top:10px">© 2026 IDP Training App Demo</div>
     </div>
   </div>
@@ -85,7 +85,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <nav id="nav"></nav>
   <div class="org"><b>Organization</b><small id="sideDivision"></small><small id="sideSection"></small></div>
   <div class="year"><b>Active Program Year</b><small>Jul 1, 2026 – Jun 30, 2027</small><small>Target: 80 Hours</small></div>
-  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.9.4</div>
+  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.9.5</div>
 </aside>
 <main>
 <header><div><strong>IDP Training Management System</strong><div class="sync-detail" id="syncDetail">Local browser data</div></div><div class="actions"><span class="connection-pill" id="connectionStatus">Local Demo</span><span id="headerUser"></span><button class="btn light" id="refreshSharedBtn" type="button" title="Refresh shared UAT data">Refresh</button><button class="btn light" id="logoutBtn">Sign Out</button></div></header>
@@ -93,7 +93,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 <section class="page active" id="dashboard">
   <div class="row"><div><h2>Employee Dashboard</h2><div class="subtitle">Training progress for the active program year.</div></div><button class="btn light" id="exportEmployeeBtn">Export</button></div>
   <div class="grid metrics" style="margin-top:16px"><div class="card metric"><span>Required Hours</span><strong id="requiredHours">80</strong><small>Annual target</small></div><div class="card metric"><span>Completed Hours</span><strong id="completedHours">0</strong><small>Approved</small></div><div class="card metric"><span>Remaining Hours</span><strong id="remainingHours">80</strong><small>To target</small></div><div class="card metric"><span>Progress</span><strong id="progressPct">0%</strong><small>On track</small></div></div>
-  <div class="grid two" style="margin-top:16px"><div class="card"><h3>Recent Requests</h3><table><thead><tr><th>Training</th><th>Date / Time</th><th>Status</th><th>Hours</th></tr></thead><tbody id="dashboardRows"></tbody></table></div><div class="card"><h3>Organization</h3><p><b>Division:</b> <span data-division></span></p><p><b>Section:</b> <span data-section></span></p><p><b>Section Approval Group:</b> <span id="dashboardApprovalGroup"></span></p><p><b>Escalation:</b> <span id="dashboardEscalationGroup"></span></p></div></div>
+  <div class="grid two" style="margin-top:16px"><div class="card"><h3>Recent Requests</h3><table><thead><tr><th>Training</th><th>Date / Time</th><th>Status</th><th>Requested</th><th>Actual Credit</th></tr></thead><tbody id="dashboardRows"></tbody></table><div class="small" style="margin-top:10px">Completed totals use approved actual hours. Requested hours remain unchanged for audit history.</div></div><div class="card"><h3>Organization</h3><p><b>Division:</b> <span data-division></span></p><p><b>Section:</b> <span data-section></span></p><p><b>Section Approval Group:</b> <span id="dashboardApprovalGroup"></span></p><p><b>Escalation:</b> <span id="dashboardEscalationGroup"></span></p></div></div>
 </section>
 
 <section class="page" id="new-request">
@@ -120,7 +120,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 <section class="page" id="my-requests">
   <div class="row"><div><h2>My Requests</h2><div class="subtitle">Track request and completion status.</div></div><button class="btn light" id="exportRequestsBtn">Export</button></div>
   <div class="search-panel"><div class="field"><label for="requestSearch">Search My Requests</label><input id="requestSearch" type="search" autocomplete="off" placeholder="Request ID, training, status, platform, category, Division or Section"></div><button class="btn light" type="button" data-clear-search="requestSearch">Clear</button><div class="search-summary" id="requestSearchCount" aria-live="polite"></div></div>
-  <div class="card" style="margin-top:16px"><table><thead><tr><th>ID</th><th>Training</th><th>Division</th><th>Section</th><th>Training Date</th><th>Start Time</th><th>End Time</th><th>Hours</th><th>Status</th><th>Reason / Note</th><th>Action</th></tr></thead><tbody id="requestRows"></tbody></table></div>
+  <div class="card" style="margin-top:16px"><table><thead><tr><th>ID</th><th>Training</th><th>Division</th><th>Section</th><th>Training Date</th><th>Start Time</th><th>End Time</th><th>Requested Hours</th><th>Approved Actual Hours</th><th>Status</th><th>Reason / Note</th><th>Action</th></tr></thead><tbody id="requestRows"></tbody></table></div>
 </section>
 
 <section class="page" id="complete-training">
@@ -286,7 +286,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 'use strict';
 
 // Internal provenance marker for future source verification; intentionally not rendered in the UI.
-const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.9.4'});
+const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.9.5'});
 
 // Canonical Dataverse for Teams deployment model. The HTML prototype keeps its
 // compact client-side collections as compatibility views for the same 13 tables.
@@ -688,16 +688,29 @@ function askChat(question){const text=String(question||'').trim();if(!text)retur
 function submitChat(e){e.preventDefault();const input=$('chatInput'),question=input.value;input.value='';askChat(question);input.focus()}
 function clearChat(){$('chatWindow').innerHTML='';addChatMessage('Hello! I am the IDP Employee Help Bot. How can I help with your IDP today?','bot')}
 
+function approvedCompletionFor(requestId){
+ return db.completions
+  .filter(c=>c.requestId===requestId&&c.status==='Approved')
+  .sort((a,b)=>String(b.reviewedDate||b.completionDate||'').localeCompare(String(a.reviewedDate||a.completionDate||'')))[0]||null;
+}
+function approvedActualHoursFor(request){
+ const completion=approvedCompletionFor(request.id);
+ return completion?Number(completion.actualHours||0):0;
+}
+function actualCreditDisplay(request){
+ const completion=approvedCompletionFor(request.id);
+ return completion?`${Number(completion.actualHours||0)} hrs`:'—';
+}
+
 function employeeProgress(employee){
  const year=db.years.find(y=>y.current&&y.active);
  const inYear=d=>!year||(!!d&&d>=year.start&&d<=year.end);
  const requests=db.requests.filter(r=>r.employeeId===employee.id);
- const allApproved=db.completions.filter(c=>c.employeeId===employee.id&&c.status==='Approved');
- const approvedInYear=allApproved.filter(c=>inYear(c.completionDate));
- const reviewedIds=new Set(allApproved.map(c=>c.requestId));
- const reviewedHours=approvedInYear.reduce((sum,c)=>sum+Number(c.actualHours||0),0);
- const legacyHours=requests.filter(r=>r.status==='Completed'&&!reviewedIds.has(r.id)&&inYear(trainingDateFor(r))).reduce((sum,r)=>sum+Number(r.hours||0),0);
- const completed=reviewedHours+legacyHours,target=Number(employee.targetHours)||Number(year?.targetHours)||80,remaining=Math.max(0,target-completed),percent=target?Math.min(100,Math.round(completed/target*100)):0;
+ const completed=requests.reduce((sum,request)=>{
+  const completion=approvedCompletionFor(request.id);
+  return completion&&inYear(completion.completionDate)?sum+Number(completion.actualHours||0):sum;
+ },0);
+ const target=Number(employee.targetHours)||Number(year?.targetHours)||80,remaining=Math.max(0,target-completed),percent=target?Math.min(100,Math.round(completed/target*100)):0;
  return {completed,target,remaining,percent,complete:target>0&&completed>=target};
 }
 
@@ -711,8 +724,8 @@ function requestActionButtons(request){
 function renderRequests(){
  const employee=getCurrentEmployee();
  if(!employee){
-  $('dashboardRows').innerHTML='<tr><td colspan="4">No employee profile found for this email.</td></tr>';
-  $('requestRows').innerHTML='<tr><td colspan="11">No employee profile found.</td></tr>';
+  $('dashboardRows').innerHTML='<tr><td colspan="5">No employee profile found for this email.</td></tr>';
+  $('requestRows').innerHTML='<tr><td colspan="12">No employee profile found.</td></tr>';
   $('completionRequest').innerHTML='<option value="">No employee profile found</option>';
   $('requiredHours').textContent='80';$('completedHours').textContent='0';$('remainingHours').textContent='80';$('progressPct').textContent='0%';setSearchSummary('requestSearchCount',0,0,'request');return;
  }
@@ -720,8 +733,8 @@ function renderRequests(){
  const requestQuery=searchValue('requestSearch');
  const filteredMine=mine.filter(r=>matchesSearch(requestQuery,r.id,r.title,r.status,r.platform,r.classType,r.category,r.trainingDate,formatTime(r.startTime),formatTime(r.endTime),r.hours,r.cost,r.decisionNote,r.cancelReason,nameOf(db.divisions,r.divisionId),nameOf(db.sections,r.sectionId)));
  const recent=[...mine].reverse().slice(0,3);
- $('dashboardRows').innerHTML=recent.map(r=>`<tr><td>${esc(r.title)}</td><td>${formatDate(trainingDateFor(r))}<div class="small">${formatTimeRange(r)}</div></td><td>${badge(r.status)}</td><td>${r.hours}</td></tr>`).join('')||'<tr><td colspan="4">No requests.</td></tr>';
- $('requestRows').innerHTML=filteredMine.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(r.title)}</td><td>${esc(nameOf(db.divisions,r.divisionId))}</td><td>${esc(nameOf(db.sections,r.sectionId))}</td><td>${formatDate(trainingDateFor(r))}</td><td>${formatTime(r.startTime)}</td><td>${formatTime(r.endTime)}</td><td>${r.hours}</td><td>${badge(r.status)}${stageApprovals(r).length?`<div class="small">${stageApprovals(r).length} of ${activeMembers(stageGroupId(r)).length||'?'} approvals</div>`:''}</td><td>${esc(r.decisionNote||r.cancelReason||'—')}</td><td><div class="actions">${requestActionButtons(r)}</div></td></tr>`).join('')||`<tr><td colspan="11">${requestQuery?'No requests match your search.':'No requests.'}</td></tr>`;
+ $('dashboardRows').innerHTML=recent.map(r=>`<tr><td>${esc(r.title)}</td><td>${formatDate(trainingDateFor(r))}<div class="small">${formatTimeRange(r)}</div></td><td>${badge(r.status)}</td><td>${Number(r.hours||0)} hrs</td><td>${actualCreditDisplay(r)}</td></tr>`).join('')||'<tr><td colspan="5">No requests.</td></tr>';
+ $('requestRows').innerHTML=filteredMine.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(r.title)}</td><td>${esc(nameOf(db.divisions,r.divisionId))}</td><td>${esc(nameOf(db.sections,r.sectionId))}</td><td>${formatDate(trainingDateFor(r))}</td><td>${formatTime(r.startTime)}</td><td>${formatTime(r.endTime)}</td><td>${Number(r.hours||0)}</td><td>${approvedCompletionFor(r.id)?approvedActualHoursFor(r):'—'}</td><td>${badge(r.status)}${stageApprovals(r).length?`<div class="small">${stageApprovals(r).length} of ${activeMembers(stageGroupId(r)).length||'?'} approvals</div>`:''}</td><td>${esc(r.decisionNote||r.cancelReason||'—')}</td><td><div class="actions">${requestActionButtons(r)}</div></td></tr>`).join('')||`<tr><td colspan="12">${requestQuery?'No requests match your search.':'No requests.'}</td></tr>`;
  setSearchSummary('requestSearchCount',filteredMine.length,mine.length,'request');
  const selectedCompletionRequest=$('completionRequest').value;
  $('completionRequest').innerHTML='<option value="">Select approved request</option>'+mine.filter(r=>r.status==='Approved').map(r=>`<option value="${r.id}">${esc(r.id+' - '+r.title+' - '+(trainingDateFor(r)||'Date not recorded')+' - '+formatTimeRange(r))}</option>`).join('');
@@ -1110,7 +1123,7 @@ function submitCompletion(e){
 
 function csv(name,rows){const text=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv;charset=utf-8'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),0)}
 function exportEmployee(){csv('idp_employee_dashboard.csv',[['Metric','Value'],['Employee',current.name],['Division',nameOf(db.divisions,current.divisionId)],['Section',nameOf(db.sections,current.sectionId)],['Completed Hours',$('completedHours').textContent],['Target Hours',$('requiredHours').textContent]])}
-function exportRequests(){csv('idp_requests.csv',[['Request ID','Title','Platform','Class Type','Category','Division','Section','Training Date','Start Time (AM/PM)','End Time (AM/PM)','Hours','Cost','Status','Escalation','Approvals Recorded','Resubmission Count','Last Modified By','Last Modified Date/Time','Modification Reason'],...db.requests.map(r=>[r.id,r.title,r.platform||'',r.classType||'',r.category||'',nameOf(db.divisions,r.divisionId),nameOf(db.sections,r.sectionId),trainingDateFor(r),formatTime(r.startTime),formatTime(r.endTime),r.hours,r.cost,r.status,r.escalation?'Yes':'No',(r.approvals||[]).map(a=>`${a.name} (${a.stage})`).join('; '),Number(r.resubmissionCount||0),r.lastModifiedBy||'',r.lastModifiedDate?formatDateTime(r.lastModifiedDate):'',r.lastModificationReason||''])])}
+function exportRequests(){csv('idp_requests.csv',[['Request ID','Title','Platform','Class Type','Category','Division','Section','Training Date','Start Time (AM/PM)','End Time (AM/PM)','Requested Hours','Approved Actual Hours','Hours Variance','Cost','Status','Escalation','Approvals Recorded','Resubmission Count','Last Modified By','Last Modified Date/Time','Modification Reason'],...db.requests.map(r=>{const c=approvedCompletionFor(r.id),actual=c?Number(c.actualHours||0):'';return[r.id,r.title,r.platform||'',r.classType||'',r.category||'',nameOf(db.divisions,r.divisionId),nameOf(db.sections,r.sectionId),trainingDateFor(r),formatTime(r.startTime),formatTime(r.endTime),r.hours,actual,c?actual-Number(r.hours||0):'',r.cost,r.status,r.escalation?'Yes':'No',(r.approvals||[]).map(a=>`${a.name} (${a.stage})`).join('; '),Number(r.resubmissionCount||0),r.lastModifiedBy||'',r.lastModifiedDate?formatDateTime(r.lastModifiedDate):'',r.lastModificationReason||'']})])}
 function exportOrganizations(){csv('idp_divisions_sections.csv',[['Division','Division Code','Section','Section Code','Section Supervisor','Approval Group','Status'],...db.sections.map(s=>[nameOf(db.divisions,s.divisionId),byId(db.divisions,s.divisionId)?.code||'',s.name,s.code,nameOf(db.employees,s.supervisorId),nameOf(db.groups,s.defaultGroupId),statusText(s.active)])])}
 function exportApprovers(){csv('idp_approval_groups.csv',[['Group','Scope','Division','Section','Method','Approver','Role','Priority'],...db.members.map(m=>{const g=byId(db.groups,m.groupId);return[g?.name,g?.scope,nameOf(db.divisions,g?.divisionId),nameOf(db.sections,g?.sectionId),g?.method,nameOf(db.employees,m.employeeId),m.role,m.priority]})])}
 function exportEmployees(){csv('idp_employees.csv',[['Name','Employee Number','Email','Division','Section','Supervisor Level','Role','Target Hours','Status'],...db.employees.map(e=>[e.name,e.number,e.email,nameOf(db.divisions,e.divisionId),nameOf(db.sections,e.sectionId),e.supervisorLevel,e.role,e.targetHours,statusText(e.active)])])}
