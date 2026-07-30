@@ -3,7 +3,7 @@
   IDP Training App Demo
   Copyright © 2026 CP. All rights reserved.
   Designed and developed by CP for application design, demonstration, and project tracking.
-  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-2.9.5.
+  Internal ownership reference: CP26-IDP-7F3A. Build: CP-IDP-2026-3.0.
 -->
 <html lang="en">
 <head>
@@ -12,7 +12,7 @@
 <meta name="author" content="CP">
 <meta name="copyright" content="Copyright 2026 CP. All rights reserved.">
 <meta name="application-name" content="IDP Training App Demo">
-<meta name="application-build" content="CP-IDP-2026-2.9.5">
+<meta name="application-build" content="CP-IDP-2026-3.0">
 <meta name="x-project-signature" content="CP26-IDP-7F3A">
 <title>IDP Training Management System</title>
 <style>
@@ -72,7 +72,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
       <div class="small" style="margin-top:10px">Unknown emails create a new profile with the Employee role. Only an Administrator can change roles.</div>
       <div id="loginNotice" class="notice" style="margin-top:10px;margin-bottom:0"></div>
       <button class="btn primary" style="width:100%;margin-top:18px" id="loginBtn">Continue to App</button>
-      <div class="small" style="text-align:center;margin-top:14px">App version 2.9.5<br>Last updated July 24, 2026</div>
+      <div class="small" style="text-align:center;margin-top:14px">App version 3.0<br>Last updated July 29, 2026</div>
       <div class="small" style="text-align:center;margin-top:10px">© 2026 IDP Training App Demo</div>
     </div>
   </div>
@@ -85,7 +85,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <nav id="nav"></nav>
   <div class="org"><b>Organization</b><small id="sideDivision"></small><small id="sideSection"></small></div>
   <div class="year"><b>Active Program Year</b><small>Jul 1, 2026 – Jun 30, 2027</small><small>Target: 80 Hours</small></div>
-  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 2.9.5</div>
+  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 3.0</div>
 </aside>
 <main>
 <header><div><strong>IDP Training Management System</strong><div class="sync-detail" id="syncDetail">Local browser data</div></div><div class="actions"><span class="connection-pill" id="connectionStatus">Local Demo</span><span id="headerUser"></span><button class="btn light" id="refreshSharedBtn" type="button" title="Refresh shared UAT data">Refresh</button><button class="btn light" id="logoutBtn">Sign Out</button></div></header>
@@ -177,7 +177,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 </section>
 
 <section class="page" id="approver">
-  <h2>Approval Queue</h2><div class="subtitle">Approval rights are enforced by approval-group membership, method (Any One / All / Sequential), and priority. Administrator actions are an audited override.</div>
+  <h2>Approval Queue</h2><div class="subtitle">Approval rights are assigned from the employee's Section or Division routing fields. Administrator actions are an audited override.</div>
   <div class="search-panel"><div class="field"><label for="approvalSearch">Search Approval and Completion Queues</label><input id="approvalSearch" type="search" autocomplete="off" placeholder="Request ID, training, employee, status, Division or Section"></div><button class="btn light" type="button" data-clear-search="approvalSearch">Clear</button><div class="search-summary" id="approvalSearchCount" aria-live="polite"></div></div>
   <div class="grid two" style="margin-top:16px"><div class="card"><h3>Request Approvals</h3><div id="approvalQueue"></div></div><div class="card"><h3>Completion Reviews</h3><div id="completionQueue"></div></div></div>
 </section>
@@ -199,26 +199,22 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <div class="card" style="margin-top:16px">
     <h3>Process Summary</h3>
     <div class="workflow-route" aria-label="System workflow summary">
-      <span class="workflow-node">Employee</span><span class="workflow-arrow">→</span><span class="workflow-node">Power Apps</span><span class="workflow-arrow">→</span><span class="workflow-node">Central Data Source</span><span class="workflow-arrow">→</span><span class="workflow-node">Section Approval Group</span><span class="workflow-arrow">→</span><span class="workflow-node">Division Approval (Conditional)</span><span class="workflow-arrow">→</span><span class="workflow-node">Completion Review</span><span class="workflow-arrow">→</span><span class="workflow-node">Compliance Dashboard</span><span class="workflow-arrow">→</span><span class="workflow-node">Audit &amp; Annual Rollover</span>
+      <span class="workflow-node">Employee</span><span class="workflow-arrow">→</span><span class="workflow-node">Power Apps</span><span class="workflow-arrow">→</span><span class="workflow-node">Dataverse for Teams</span><span class="workflow-arrow">→</span><span class="workflow-node">Section Approver</span><span class="workflow-arrow">→</span><span class="workflow-node">Division Approval (Conditional)</span><span class="workflow-arrow">→</span><span class="workflow-node">Completion Review</span><span class="workflow-arrow">→</span><span class="workflow-node">Compliance Dashboard</span><span class="workflow-arrow">→</span><span class="workflow-node">Audit &amp; Annual Rollover</span>
     </div>
   </div>
   <div class="card table-scroll" style="margin-top:16px">
-    <h3>Dataverse for Teams — Reduced 13-Table Model</h3>
-    <p class="subtitle">The application behavior is unchanged. Related setup data is consolidated to reduce maintenance while preserving Division/Section routing, approvals, completions, reporting, notifications, and audit history.</p>
+    <h3>Dataverse for Teams — Simplified 9-Table Pilot Model</h3>
+    <p class="subtitle">This pilot removes optional session and notification storage and stores approver routing directly on Organization Unit. Teams/email notifications are sent by Power Automate. Audit Log remains because correction history is required.</p>
     <table><thead><tr><th>#</th><th>Dataverse Table</th><th>Purpose</th><th>Consolidation</th></tr></thead><tbody>
-      <tr><td>1</td><td>IDP Organization Unit</td><td>Division and Section hierarchy, supervisor, and default approval group.</td><td>Replaces separate Division and Section tables.</td></tr>
+      <tr><td>1</td><td>IDP Organization Unit</td><td>Division/Section hierarchy, supervisor, assigned approvers, completion reviewer, and approval method.</td><td>Also replaces Approval Group and Group Member.</td></tr>
       <tr><td>2</td><td>IDP Employee</td><td>Microsoft 365 identity, organization assignment, and app role.</td><td>Role is a Choice on Employee.</td></tr>
       <tr><td>3</td><td>IDP Program Year</td><td>Annual dates, default target, escalation threshold, and default times.</td><td>Includes former system settings.</td></tr>
       <tr><td>4</td><td>IDP Employee Target</td><td>Employee-specific target by Program Year.</td><td>Preserves historical annual targets.</td></tr>
       <tr><td>5</td><td>IDP Reference Value</td><td>Platform, Class Type, and Category values.</td><td>Replaces three reference tables.</td></tr>
-      <tr><td>6</td><td>IDP Approval Group</td><td>Section/Division scope and approval method.</td><td>Unchanged business function.</td></tr>
-      <tr><td>7</td><td>IDP Approval Group Member</td><td>Approver membership, order, and completion-review permission.</td><td>Unchanged business function.</td></tr>
-      <tr><td>8</td><td>IDP Training Session</td><td>Optional scheduled offerings and capacity.</td><td>Supports reusable sessions.</td></tr>
-      <tr><td>9</td><td>IDP Training Request</td><td>Employee request, planned values, routing snapshots, status, and correction tracking.</td><td>Core transaction.</td></tr>
-      <tr><td>10</td><td>IDP Approval</td><td>Section, Division, and Completion decisions with required reasons.</td><td>One decision-history table.</td></tr>
-      <tr><td>11</td><td>IDP Training Completion</td><td>Actual date/time/hours, variance, certificate, and review status.</td><td>Includes former Certificate table.</td></tr>
-      <tr><td>12</td><td>IDP Notification</td><td>In-app/email notification queue and delivery state.</td><td>Unchanged business function.</td></tr>
-      <tr><td>13</td><td>IDP Audit Log</td><td>Actor, timestamp, reason, and previous/new values.</td><td>Custom audit retained.</td></tr>
+      <tr><td>6</td><td>IDP Training Request</td><td>Employee request, planned values, routing snapshots, status, and correction tracking.</td><td>Training is entered directly; no Session table.</td></tr>
+      <tr><td>7</td><td>IDP Training Completion</td><td>Actual date/time/hours, variance, certificate, and review status.</td><td>Includes certificate metadata/file.</td></tr>
+      <tr><td>8</td><td>IDP Approval</td><td>Section, Division, and Completion decisions with assigned approver and required reason.</td><td>No Approval Group lookup.</td></tr>
+      <tr><td>9</td><td>IDP Audit Log</td><td>Actor, timestamp, reason, and previous/new values.</td><td>Required for corrections and status history.</td></tr>
     </tbody></table>
   </div>
   <div class="card table-scroll" style="margin-top:16px">
@@ -227,8 +223,8 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
       <tr><td>2</td><td><span class="workflow-phase">Request</span></td><td>Employee</td><td>Enter training title, platform, class type, category, date, start/end time, requested hours, cost, and justification.</td><td>Required fields must be complete.</td><td>Draft request is ready for validation.</td></tr>
       <tr><td>3</td><td><span class="workflow-phase">Request</span></td><td>Power Apps</td><td>Validate active Program Year, required fields, 30-minute times, End &gt; Start, and Requested Hours ≤ selected time window.</td><td>Invalid data is blocked with a field message.</td><td>Valid request continues.</td></tr>
       <tr><td>4</td><td><span class="workflow-phase">Request</span></td><td>App / Data Source</td><td>Generate Request ID, timestamp, organization snapshot, and audit record; save the request.</td><td>Request ID must be unique.</td><td>Status = Pending Section Approval.</td></tr>
-      <tr><td>5</td><td><span class="workflow-phase">Section Approval</span></td><td>Automation</td><td>Resolve the active Section Approval Group, create eligible reviewer records, and notify members.</td><td>A configured active group is required.</td><td>Route to Section Approval Queue.</td></tr>
-      <tr><td>6</td><td><span class="workflow-phase">Section Approval</span></td><td>Section Approver</td><td>Review the request, justification, planned date/time, hours, cost, and employee scope.</td><td>Membership, priority, and Any One / All / Sequential method are enforced.</td><td>Approve, Return, or Reject.</td></tr>
+      <tr><td>5</td><td><span class="workflow-phase">Section Approval</span></td><td>Automation</td><td>Read the assigned Section Approver from Organization Unit, create the pending Approval record, and send a Teams/email notification.</td><td>An active assigned approver is required.</td><td>Route to Section Approval Queue.</td></tr>
+      <tr><td>6</td><td><span class="workflow-phase">Section Approval</span></td><td>Section Approver</td><td>Review the request, justification, planned date/time, hours, cost, and employee scope.</td><td>The assigned approver, pending status, and organization scope are rechecked.</td><td>Approve, Return, or Reject.</td></tr>
       <tr><td>7A</td><td><span class="workflow-phase">Correction</span></td><td>Section Approver</td><td>Return the request to the employee.</td><td>A return reason is required.</td><td>Status = Returned; employee notified.</td></tr>
       <tr><td>7B</td><td><span class="workflow-phase">Correction</span></td><td>Employee</td><td>Edit the returned record and resubmit it.</td><td>Owner only; all validation repeats; before/after values are audited.</td><td>Status = Pending; return to Step 5.</td></tr>
       <tr><td>7C</td><td><span class="workflow-phase">Closure</span></td><td>Section Approver</td><td>Reject the request.</td><td>A rejection reason is required.</td><td>Status = Rejected; employee notified.</td></tr>
@@ -286,15 +282,17 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 'use strict';
 
 // Internal provenance marker for future source verification; intentionally not rendered in the UI.
-const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-2.9.5'});
+const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-3.0'});
 
 // Canonical Dataverse for Teams deployment model. The HTML prototype keeps its
-// compact client-side collections as compatibility views for the same 13 tables.
+// compact client-side collections as compatibility views for the simplified
+// 9-table Dataverse for Teams pilot. Notification and routing arrays remain
+// prototype UI state; production delivery uses Power Automate and routing
+// lookups stored on IDP Organization Unit.
 const DATAVERSE_TABLES=Object.freeze([
  'IDP Organization Unit','IDP Employee','IDP Program Year','IDP Employee Target',
- 'IDP Reference Value','IDP Approval Group','IDP Approval Group Member',
- 'IDP Training Session','IDP Training Request','IDP Approval',
- 'IDP Training Completion','IDP Notification','IDP Audit Log'
+ 'IDP Reference Value','IDP Training Request','IDP Training Completion',
+ 'IDP Approval','IDP Audit Log'
 ]);
 
 const MASTER_PLATFORM_VALUES=Object.freeze([
@@ -346,7 +344,7 @@ const UAT_SESSION_KEY='idpSharedUatSessionV1';
 const UAT_STATE_ID='primary';
 const UAT_POLL_MS=5000;
 const seed={
- schemaVersion:'2.9-13-table',
+ schemaVersion:'3.0-9-table',
  dataverseTables:[...DATAVERSE_TABLES],
  organizationUnits:[
   {id:'OU-DIV1',name:'Operations Division',code:'OPS',unitType:'Division',parentUnitId:'',supervisorEmployeeId:'EMP3',defaultApprovalGroupId:'GRP2',active:true},
@@ -459,7 +457,7 @@ function mergeReferenceValues(existing){
  return result;
 }
 function normalizeData(d){
- d=d&&typeof d==='object'?d:clone(seed);d.schemaVersion='2.9-13-table';d.dataverseTables=[...DATAVERSE_TABLES];
+ d=d&&typeof d==='object'?d:clone(seed);d.schemaVersion='3.0-9-table';d.dataverseTables=[...DATAVERSE_TABLES];
  d.organizationUnits=d.organizationUnits||clone(seed.organizationUnits);
  d.platforms=mergeMasterValues(d.platforms,MASTER_PLATFORMS,{'info-tech':'Info-Tech Academy'});
  d.classTypes=mergeMasterValues(d.classTypes,MASTER_CLASS_TYPES,{'online':'Self-Paced Online','instructor-led':'In-Person Instructor-Led'});
