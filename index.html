@@ -33,6 +33,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 .small{font-size:12px;color:var(--m)}.required::after{content:" *";color:var(--r)}
 .ownership{padding:14px 16px;color:var(--m);font-size:11px;line-height:1.55;border-top:1px solid var(--bd)}.ownership strong{color:var(--pd)}
 .progress-track{width:130px;height:9px;background:#e8edf5;border-radius:999px;overflow:hidden}.progress-fill{height:100%;background:var(--p);border-radius:999px}.progress-fill.done{background:var(--g)}
+.person-link{border:0;background:none;color:var(--p);font:inherit;font-weight:700;padding:0;text-decoration:underline;cursor:pointer}.person-link:hover{color:#0b6fa4}.progress-summary{background:#f5f8fc;border:1px solid var(--line);border-radius:12px;padding:14px}.progress-summary strong{font-size:1.35rem;color:var(--navy)}
 .chat-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px}.chat-window{height:420px;overflow:auto;background:#f8fafc;border:1px solid var(--bd);border-radius:10px;padding:16px}.chat-message{display:flex;margin:9px 0}.chat-message.employee{justify-content:flex-end}.chat-bubble{max-width:82%;padding:10px 13px;border-radius:12px;line-height:1.45;white-space:pre-wrap}.chat-message.bot .chat-bubble{background:#eaf8fd;border:1px solid #bfe8f7;color:#173675}.chat-message.employee .chat-bubble{background:var(--p);color:#fff}.chat-form{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:12px}.quick-question{width:100%;margin:4px 0;text-align:left}
 .comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.comparison-panel{border:1px solid var(--bd);border-radius:10px;padding:14px;background:#f8fafc}.comparison-panel h4{margin:0 0 10px;color:var(--p)}.comparison-line{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--bd)}.comparison-line:last-child{border-bottom:0}.comparison-line span{color:var(--m)}.variance-summary{margin-top:12px;padding:11px 13px;border-radius:8px;font-weight:600}.variance-summary.match{background:#e8f7ec;color:#146a31}.variance-summary.changed{background:#fff2bd;color:#715600}.variance-list{margin:7px 0 0;padding-left:19px;font-weight:400}
 .workflow-route{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:700;color:var(--p)}.workflow-node{background:#fff;border:1px solid var(--charcoal);border-radius:7px;padding:8px 10px}.workflow-arrow{color:var(--charcoal);font-size:18px}.workflow-phase{display:inline-block;padding:4px 8px;border-radius:5px;background:var(--gray);color:var(--charcoal);font-size:12px;font-weight:700}.table-scroll{overflow-x:auto}
@@ -72,7 +73,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
       <div class="small" style="margin-top:10px">Unknown emails create a new profile with the Employee role. Only an Administrator can change roles.</div>
       <div id="loginNotice" class="notice" style="margin-top:10px;margin-bottom:0"></div>
       <button class="btn primary" style="width:100%;margin-top:18px" id="loginBtn">Continue to App</button>
-      <div class="small" style="text-align:center;margin-top:14px">App version 3.0<br>Last updated July 29, 2026</div>
+      <div class="small" style="text-align:center;margin-top:14px">App version 3.1.1<br>Last updated August 2, 2026</div>
       <div class="small" style="text-align:center;margin-top:10px">© 2026 IDP Training App Demo</div>
     </div>
   </div>
@@ -85,7 +86,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
   <nav id="nav"></nav>
   <div class="org"><b>Organization</b><small id="sideDivision"></small><small id="sideSection"></small></div>
   <div class="year"><b>Active Program Year</b><small>Jul 1, 2026 – Jun 30, 2027</small><small>Target: 80 Hours</small></div>
-  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 3.0</div>
+  <div class="ownership"><strong>© 2026 IDP Training App Demo</strong><br>HTML5 · CSS3 · JavaScript<br>Version 3.1</div>
 </aside>
 <main>
 <header><div><strong>IDP Training Management System</strong><div class="sync-detail" id="syncDetail">Local browser data</div></div><div class="actions"><span class="connection-pill" id="connectionStatus">Local Demo</span><span id="headerUser"></span><button class="btn light" id="refreshSharedBtn" type="button" title="Refresh shared UAT data">Refresh</button><button class="btn light" id="logoutBtn">Sign Out</button></div></header>
@@ -167,7 +168,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 <section class="page" id="section-dashboard">
   <h2>Section Supervisor Dashboard</h2><div class="subtitle">Manage employees and training activity in the assigned Section.</div>
   <div class="grid metrics" style="margin-top:16px"><div class="card metric"><span>Section Employees</span><strong id="sectionEmployeeCount">0</strong></div><div class="card metric"><span>Pending Requests</span><strong id="sectionPendingCount">0</strong></div><div class="card metric"><span>Pending Completions</span><strong id="sectionCompletionCount">0</strong></div><div class="card metric"><span>Section Compliance</span><strong id="sectionCompliance">0%</strong></div></div>
-  <div class="card" style="margin-top:16px"><h3>Section Employees</h3><table><thead><tr><th>Employee</th><th>Email</th><th>Role</th><th>Status</th></tr></thead><tbody id="sectionEmployeeRows"></tbody></table></div>
+  <div class="card" style="margin-top:16px"><h3>Section Employees</h3><div class="small" style="margin-bottom:10px">Select an employee to review current-year progress and prepare a follow-up email. This action is available only to the assigned Section Supervisor.</div><table><thead><tr><th>Employee</th><th>Email</th><th>Role</th><th>Status</th><th>Follow-up</th></tr></thead><tbody id="sectionEmployeeRows"></tbody></table></div>
 </section>
 
 <section class="page" id="division-dashboard">
@@ -278,11 +279,13 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 
 <div class="modal" id="modal"><div class="modal-card"><div class="row"><div><h3 id="modalTitle">Edit</h3><div class="subtitle" id="modalSubtitle"></div></div><button class="btn light" id="modalCloseBtn">Close</button></div><form id="entityForm" novalidate><input type="hidden" id="entityType"><input type="hidden" id="entityId"><div id="modalFields" class="form-grid" style="margin-top:16px"></div><div id="modalNotice" class="notice"></div><div class="actions" style="margin-top:18px"><button class="btn primary" type="submit" id="modalSaveBtn">Save</button><button class="btn light" type="button" id="modalCancelBtn">Cancel</button></div></form></div></div>
 
+<div class="modal" id="progressEmailModal"><div class="modal-card"><div class="row"><div><h3>Employee Progress Follow-up</h3><div class="subtitle" id="progressEmailSubtitle">Review the progress details before opening the email draft.</div></div><button class="btn light" id="progressEmailCloseBtn" type="button">Close</button></div><input type="hidden" id="progressEmailEmployeeId"><div id="progressEmailSummary" class="progress-summary" style="margin-top:16px"></div><div class="form-grid" style="margin-top:16px"><div class="field full"><label>To</label><input id="progressEmailTo" type="email" readonly></div><div class="field full"><label class="required">Subject</label><input id="progressEmailSubject" maxlength="180" required></div><div class="field full"><label class="required">Message</label><textarea id="progressEmailBody" maxlength="4000" required style="min-height:220px"></textarea></div></div><div id="progressEmailNotice" class="notice"></div><div class="small" style="margin-top:12px">The HTML demo opens the device's default email application. It cannot confirm that the message was sent. In Power Apps, use Power Automate for controlled delivery and logging.</div><div class="actions" style="margin-top:18px"><button class="btn primary" id="openProgressEmailBtn" type="button">Open Email Draft</button><button class="btn light" id="copyProgressEmailBtn" type="button">Copy Email Text</button><button class="btn light" id="progressEmailCancelBtn" type="button">Cancel</button></div></div></div>
+
 <script>
 'use strict';
 
 // Internal provenance marker for future source verification; intentionally not rendered in the UI.
-const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-3.0'});
+const BUILD_PROVENANCE=Object.freeze({ownerRef:'CP26',projectRef:'IDP-7F3A',build:'CP-IDP-2026-3.1.1'});
 
 // Canonical Dataverse for Teams deployment model. The HTML prototype keeps its
 // compact client-side collections as compatibility views for the simplified
@@ -600,10 +603,16 @@ function hydrateRequestIdentity(employee=getCurrentEmployee()){
  $('requestDivision').value=nameOf(db.divisions,divisionId)||'Not assigned';
  $('requestSection').value=nameOf(db.sections,sectionId)||'Not assigned';
 }
+function assignedSectionForSupervisor(employeeId){return db.sections.find(section=>section.active&&section.supervisorId===employeeId)||null}
+function assignedDivisionForSupervisor(employeeId){return db.divisions.find(division=>division.active&&division.supervisorId===employeeId)||null}
 function applyEmployeeContext(employee){
  if(!employee)return false;
- const effectiveRole=employee.supervisorLevel&&employee.supervisorLevel!=='None'?employee.supervisorLevel:employee.role;
- current={employeeId:employee.id,name:employee.name,email:String(employee.email||'').trim().toLowerCase(),role:effectiveRole,divisionId:employee.divisionId||'',sectionId:employee.sectionId||''};
+ const assignedSection=assignedSectionForSupervisor(employee.id),assignedDivision=assignedDivisionForSupervisor(employee.id);
+ let effectiveRole=employee.role,effectiveDivisionId=employee.divisionId||'',effectiveSectionId=employee.sectionId||'';
+ if(assignedSection){effectiveRole='Section Supervisor';effectiveDivisionId=assignedSection.divisionId||effectiveDivisionId;effectiveSectionId=assignedSection.id}
+ else if(assignedDivision){effectiveRole='Division Supervisor';effectiveDivisionId=assignedDivision.id;effectiveSectionId=''}
+ else if(employee.supervisorLevel&&employee.supervisorLevel!=='None')effectiveRole=employee.supervisorLevel;
+ current={employeeId:employee.id,name:employee.name,email:String(employee.email||'').trim().toLowerCase(),role:effectiveRole,divisionId:effectiveDivisionId,sectionId:effectiveSectionId};
  $('sideName').textContent=current.name;$('sideRole').textContent=current.role;$('sideDivision').textContent='Division: '+(nameOf(db.divisions,current.divisionId)||'Not assigned');$('sideSection').textContent='Section: '+(nameOf(db.sections,current.sectionId)||'Not assigned');$('headerUser').textContent=current.name+' · '+current.role;
  hydrateRequestIdentity(employee);
  return true;
@@ -780,7 +789,8 @@ function performCancelRequest(id,reason){
 
 function renderDashboards(){
  const secEmployees=db.employees.filter(e=>e.sectionId===current.sectionId&&e.active);$('sectionEmployeeCount').textContent=secEmployees.length;$('sectionPendingCount').textContent=db.requests.filter(r=>r.sectionId===current.sectionId&&r.status==='Pending').length;$('sectionCompletionCount').textContent=db.completions.filter(c=>c.sectionId===current.sectionId&&c.status==='Submitted').length;
- $('sectionEmployeeRows').innerHTML=secEmployees.map(e=>`<tr><td>${esc(e.name)}</td><td>${esc(e.email)}</td><td>${esc(e.role)}</td><td>${badge(statusText(e.active))}</td></tr>`).join('')||'<tr><td colspan="4">No employees.</td></tr>';
+ $('sectionEmployeeRows').innerHTML=secEmployees.map(e=>{const allowed=canSectionFollowUp(e);return `<tr><td>${allowed?`<button class="person-link" type="button" data-progress-employee="${e.id}">${esc(e.name)}</button>`:esc(e.name)}</td><td>${esc(e.email)}</td><td>${esc(e.role)}</td><td>${badge(statusText(e.active))}</td><td>${allowed?`<button class="btn light" type="button" data-progress-employee="${e.id}">View &amp; Email</button>`:'—'}</td></tr>`}).join('')||'<tr><td colspan="5">No employees.</td></tr>';
+ document.querySelectorAll('#sectionEmployeeRows [data-progress-employee]').forEach(button=>button.addEventListener('click',()=>openProgressEmail(button.dataset.progressEmployee)));
  const divSections=db.sections.filter(s=>s.divisionId===current.divisionId&&s.active);const divEmployees=db.employees.filter(e=>e.divisionId===current.divisionId&&e.active);$('divisionSectionCount').textContent=divSections.length;$('divisionEmployeeCount').textContent=divEmployees.length;$('divisionEscalationCount').textContent=db.requests.filter(r=>r.divisionId===current.divisionId&&r.status==='Pending Division Approval').length;
  $('divisionSectionRows').innerHTML=divSections.map(s=>`<tr><td>${esc(s.name)}</td><td>${db.employees.filter(e=>e.sectionId===s.id&&e.active).length}</td><td>${esc(nameOf(db.groups,s.defaultGroupId)||'Not configured')}</td><td>${badge(statusText(s.active))}</td></tr>`).join('');
  $('reportDivisions').textContent=db.divisions.filter(x=>x.active).length;$('reportSections').textContent=db.sections.filter(x=>x.active).length;$('reportEmployees').textContent=db.employees.filter(x=>x.active).length;
@@ -800,13 +810,47 @@ function renderCompliance(){
  const rows=allRows.filter(x=>{const status=x.complete?'Completed':x.completed>0?'In Progress':'Not Started';return matchesSearch(complianceQuery,x.employee.id,x.employee.name,x.employee.email,x.employee.role,nameOf(db.divisions,x.employee.divisionId),nameOf(db.sections,x.employee.sectionId),latestEmployeeTrainingDate(x.employee.id),x.target,x.completed,x.remaining,x.percent,status)});
  const completed=allRows.filter(x=>x.complete).length,inProgress=allRows.filter(x=>!x.complete&&x.completed>0).length,rate=allRows.length?Math.round(completed/allRows.length*100):0;
  $('complianceEmployees').textContent=allRows.length;$('complianceCompleted').textContent=completed;$('complianceInProgress').textContent=inProgress;$('complianceRate').textContent=rate+'%';
- $('complianceRows').innerHTML=rows.map(x=>`<tr><td>${esc(x.employee.name)}</td><td>${esc(nameOf(db.divisions,x.employee.divisionId))}</td><td>${esc(nameOf(db.sections,x.employee.sectionId)||'Not assigned')}</td><td>${formatDate(latestEmployeeTrainingDate(x.employee.id))}</td><td>${x.target}</td><td>${x.completed}</td><td>${x.remaining}</td><td><div>${x.percent}%</div><div class="progress-track"><div class="progress-fill ${x.complete?'done':''}" style="width:${x.percent}%"></div></div></td><td>${badge(x.complete?'Completed':x.completed>0?'In Progress':'Not Started')}</td></tr>`).join('')||`<tr><td colspan="9">${complianceQuery?'No employees match your search.':'No active employees.'}</td></tr>`;
+ $('complianceRows').innerHTML=rows.map(x=>{const allowed=canSectionFollowUp(x.employee);return `<tr><td>${allowed?`<button class="person-link" type="button" data-progress-employee="${x.employee.id}">${esc(x.employee.name)}</button>`:esc(x.employee.name)}</td><td>${esc(nameOf(db.divisions,x.employee.divisionId))}</td><td>${esc(nameOf(db.sections,x.employee.sectionId)||'Not assigned')}</td><td>${formatDate(latestEmployeeTrainingDate(x.employee.id))}</td><td>${x.target}</td><td>${x.completed}</td><td>${x.remaining}</td><td><div>${x.percent}%</div><div class="progress-track"><div class="progress-fill ${x.complete?'done':''}" style="width:${x.percent}%"></div></div></td><td>${badge(x.complete?'Completed':x.completed>0?'In Progress':'Not Started')}</td></tr>`}).join('')||`<tr><td colspan="9">${complianceQuery?'No employees match your search.':'No active employees.'}</td></tr>`;
+ document.querySelectorAll('#complianceRows [data-progress-employee]').forEach(button=>button.addEventListener('click',()=>openProgressEmail(button.dataset.progressEmployee)));
  setSearchSummary('complianceSearchCount',rows.length,allRows.length,'employee');
  const sectionEmployees=db.employees.filter(e=>e.active&&e.sectionId===current.sectionId),sectionDone=sectionEmployees.filter(e=>employeeProgress(e).complete).length;
  const divisionEmployees=db.employees.filter(e=>e.active&&e.divisionId===current.divisionId),divisionDone=divisionEmployees.filter(e=>employeeProgress(e).complete).length;
  const allEmployees=db.employees.filter(e=>e.active),allDone=allEmployees.filter(e=>employeeProgress(e).complete).length;
  const sectionRate=sectionEmployees.length?Math.round(sectionDone/sectionEmployees.length*100):0,divisionRate=divisionEmployees.length?Math.round(divisionDone/divisionEmployees.length*100):0,overallRate=allEmployees.length?Math.round(allDone/allEmployees.length*100):0;
  if($('sectionCompliance'))$('sectionCompliance').textContent=sectionRate+'%';if($('divisionCompliance'))$('divisionCompliance').textContent=divisionRate+'%';if($('reportCompliance'))$('reportCompliance').textContent=overallRate+'%';
+}
+
+function canSectionFollowUp(employee){
+ const supervisor=getCurrentEmployee(),assignedSection=assignedSectionForSupervisor(supervisor?.id);
+ const authorized=current.role==='Section Supervisor'&&(!!assignedSection||supervisor?.supervisorLevel==='Section Supervisor');
+ const sectionId=assignedSection?.id||current.sectionId;
+ return authorized&&!!employee&&employee.active&&employee.sectionId===sectionId;
+}
+function progressStatus(progress){return progress.complete?'Completed':progress.completed>0?'In Progress':'Not Started'}
+function openProgressEmail(employeeId){
+ const employee=byId(db.employees,employeeId);
+ if(!canSectionFollowUp(employee)){notify('adminNotice','Only the assigned Section Supervisor can send progress follow-up emails for employees in the same Section.','err');return}
+ const progress=employeeProgress(employee),year=db.years.find(y=>y.current&&y.active),status=progressStatus(progress),latest=latestEmployeeTrainingDate(employee.id);
+ const yearLabel=year?.name||`${year?.start||''} to ${year?.end||''}`||'Active Program Year';
+ $('progressEmailEmployeeId').value=employee.id;$('progressEmailTo').value=employee.email;
+ $('progressEmailSubject').value=`IDP Training Progress Follow-up - ${employee.name}`;
+ $('progressEmailBody').value=`Hello ${employee.name},\n\nThis is a follow-up regarding your Individual Development Plan training progress for ${yearLabel}.\n\nAnnual target: ${progress.target} hours\nApproved completed hours: ${progress.completed} hours\nRemaining hours: ${progress.remaining} hours\nProgress: ${progress.percent}%\nStatus: ${status}\nLatest training date: ${latest?formatDate(latest):'No training date recorded'}\n\nPlease review your IDP record and submit or complete any outstanding training activity. If your information is incorrect, please contact your Section Supervisor.\n\nThank you,\n${current.name}\nSection Supervisor`;
+ $('progressEmailSummary').innerHTML=`<div class="grid metrics"><div><span class="small">Employee</span><div><b>${esc(employee.name)}</b></div></div><div><span class="small">Completed</span><div><strong>${progress.completed}</strong> / ${progress.target} hrs</div></div><div><span class="small">Remaining</span><div><strong>${progress.remaining}</strong> hrs</div></div><div><span class="small">Progress</span><div><strong>${progress.percent}%</strong> · ${esc(status)}</div></div></div>`;
+ $('progressEmailNotice').className='notice';$('progressEmailModal').classList.add('show');$('progressEmailSubject').focus();
+}
+function closeProgressEmail(){$('progressEmailModal').classList.remove('show');$('progressEmailEmployeeId').value='';$('progressEmailNotice').className='notice'}
+function openProgressEmailDraft(){
+ const employee=byId(db.employees,$('progressEmailEmployeeId').value);
+ if(!canSectionFollowUp(employee)){notify('progressEmailNotice','Supervisor permission or Section assignment is no longer valid.','err');return}
+ const to=$('progressEmailTo').value.trim(),subject=$('progressEmailSubject').value.trim(),body=$('progressEmailBody').value.trim();
+ if(!to||!subject||!body){notify('progressEmailNotice','Recipient, subject, and message are required.','err');return}
+ audit('Progress follow-up email draft opened','Employee',employee.id,`Recipient: ${to}; Subject: ${subject}`,{newValues:JSON.stringify({recipient:to,subject,progress:employeeProgress(employee),draftOpenedAt:new Date().toISOString()})});
+ window.location.href=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+ notify('progressEmailNotice','Email draft opened. Send it from your email application.','ok');
+}
+async function copyProgressEmail(){
+ const text=`To: ${$('progressEmailTo').value}\nSubject: ${$('progressEmailSubject').value}\n\n${$('progressEmailBody').value}`;
+ try{await navigator.clipboard.writeText(text);notify('progressEmailNotice','Email text copied.','ok')}catch(error){notify('progressEmailNotice','Copy was blocked by the browser. Select the message and copy it manually.','err')}
 }
 
 function stageGroupId(r){
@@ -1134,7 +1178,7 @@ function init(){
  populateLogin();
  populateTimeOptions();
  updateDataModeUi();
- $('dataMode').addEventListener('change',updateDataModeUi);$('loginBtn').addEventListener('click',signIn);$('logoutBtn').addEventListener('click',logout);$('refreshSharedBtn').addEventListener('click',refreshSharedData);$('requestForm').addEventListener('submit',submitRequest);$('completionForm').addEventListener('submit',submitCompletion);$('completionRequest').addEventListener('change',selectCompletionRequest);['completionDate','actualStartTime','actualEndTime','actualHours'].forEach(id=>$(id).addEventListener('input',renderCompletionComparison));$('chatForm').addEventListener('submit',submitChat);$('clearChatBtn').addEventListener('click',clearChat);document.querySelectorAll('[data-chat-question]').forEach(button=>button.addEventListener('click',()=>askChat(button.dataset.chatQuestion)));$('entityForm').addEventListener('submit',saveEntity);$('modalCloseBtn').addEventListener('click',closeModal);$('modalCancelBtn').addEventListener('click',closeModal);$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
+ $('dataMode').addEventListener('change',updateDataModeUi);$('loginBtn').addEventListener('click',signIn);$('logoutBtn').addEventListener('click',logout);$('refreshSharedBtn').addEventListener('click',refreshSharedData);$('requestForm').addEventListener('submit',submitRequest);$('completionForm').addEventListener('submit',submitCompletion);$('completionRequest').addEventListener('change',selectCompletionRequest);['completionDate','actualStartTime','actualEndTime','actualHours'].forEach(id=>$(id).addEventListener('input',renderCompletionComparison));$('chatForm').addEventListener('submit',submitChat);$('clearChatBtn').addEventListener('click',clearChat);document.querySelectorAll('[data-chat-question]').forEach(button=>button.addEventListener('click',()=>askChat(button.dataset.chatQuestion)));$('entityForm').addEventListener('submit',saveEntity);$('modalCloseBtn').addEventListener('click',closeModal);$('modalCancelBtn').addEventListener('click',closeModal);$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});$('progressEmailCloseBtn').addEventListener('click',closeProgressEmail);$('progressEmailCancelBtn').addEventListener('click',closeProgressEmail);$('openProgressEmailBtn').addEventListener('click',openProgressEmailDraft);$('copyProgressEmailBtn').addEventListener('click',copyProgressEmail);$('progressEmailModal').addEventListener('click',e=>{if(e.target===$('progressEmailModal'))closeProgressEmail()});
  $('exportEmployeeBtn').addEventListener('click',exportEmployee);$('exportComplianceBtn').addEventListener('click',exportCompliance);$('exportRequestsBtn').addEventListener('click',exportRequests);$('exportRequestsAdminBtn').addEventListener('click',exportRequests);$('exportOrgBtn').addEventListener('click',exportOrganizations);$('exportApproversBtn').addEventListener('click',exportApprovers);$('exportEmployeesBtn').addEventListener('click',exportEmployees);$('backupBtn').addEventListener('click',backup);$('resetBtn').addEventListener('click',resetData);$('saveAllBtn').addEventListener('click',()=>{saveData();audit('Saved all changes','System',dataMode==='shared'?'Shared UAT database':'Local prototype storage');notify('adminNotice',dataMode==='shared'?'Changes queued for Shared UAT synchronization.':'All local changes saved successfully.','ok')});
  const searchRenderers={requestSearch:renderRequests,approvalSearch:renderApprovals,complianceSearch:renderCompliance,adminSearch:renderAdmin,notificationSearch:renderNotifications};
  Object.entries(searchRenderers).forEach(([id,renderer])=>{$(id).addEventListener('input',renderer);$(id).addEventListener('keydown',event=>{if(event.key==='Escape'&&$(id).value){$(id).value='';renderer()}})});
